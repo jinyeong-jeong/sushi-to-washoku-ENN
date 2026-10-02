@@ -1322,6 +1322,16 @@
       .header-hamburger span {
         background-color: #ffffff !important;
       } */
+       .waza-main-wrapper,
+      #waza,
+      section[id*="waza"] {
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        box-sizing: border-box !important;
+      }
 
       /* 2. 想い/技 글귀 컨테이너 가로 쓰기(Horizontal) 전환 */
       .omoi-poem-wrapper {
@@ -1339,17 +1349,21 @@
       }
 
       .waza-poem-wrapper {
-        writing-mode: horizontal-tb !important;
+       writing-mode: horizontal-tb !important;
         -webkit-writing-mode: horizontal-tb !important;
         height: auto !important;
+        max-height: none !important;
         width: 100% !important;
-        max-width: 90vw !important;
-        margin: 0 auto !important;
-        text-align: center !important;
+        max-width: 100% !important;
+        white-space: normal !important; /* 줄바꿈 허용 */
+        word-break: keep-all !important; /* 단어 단위 정갈한 줄바꿈 */
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        gap: 12px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 14px !important;
+        margin: 0 auto !important;
       }
 
       /* 3. 글귀 각 문장별 스타일 최적화 */
@@ -1367,8 +1381,8 @@
         letter-spacing: 1.5px !important;
         line-height: 1.8 !important;
         margin-left: 0 !important;
-        white-space: normal !important; /* 모바일에서 긴 문장 자동 줄바꿈 허용 */
-        word-break: keep-all !important; /* 단어 단위로 예쁘게 줄바꿈 */
+        margin-right: 0 !important;
+        margin-top: 0 !important;
         color: rgba(255, 255, 255, 0.95) !important;
       }
 
@@ -1391,8 +1405,7 @@
         margin-left: 0 !important;
       }
       .waza-poem-wrapper .v-line.space-left {
-        margin-top: 12px !important;
-        margin-left: 0 !important;
+       margin-top: 10px !important;
       }
 
       .scroll-indicator,
