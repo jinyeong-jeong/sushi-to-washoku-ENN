@@ -20,9 +20,9 @@
     }
 
     body, html {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden; /* SPA 전체 화면 고정 / SPA全体画面固定 */
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden; /* 좌우 스크롤 전역 차단 */
       background-color: #fbfaf7;
       color: #111111;
       font-family: "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif;
@@ -51,7 +51,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
+      width: 100%;
       padding: 35px 5vw;
       display: flex;
       justify-content: space-between;
@@ -60,7 +60,6 @@
       pointer-events: none;
     }
 
-    /* [수정] 1. 상단 헤더 로고 박스 스타일 */
     .header-logo {
       width: 50px;
       height: 50px;
@@ -91,14 +90,11 @@
       pointer-events: auto;
       border-radius: 2px;
       backdrop-filter: blur(6px);
-      /* 부드럽고 고급스러운 크기 확대 애니메이션 설정 */
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
       will-change: transform;
     }
 
     .header-hamburger:hover {
-      /* background: rgba(251, 250, 247, 1); */
-      /* 마우스 호버 시 10% 부드럽게 확대 */
       transform: scale(1.1);
     }
 
@@ -107,26 +103,19 @@
       width: 26px;
       height: 1px;
       background-color: #111111;
-      /* 선 자체도 호버 시 유연하게 반응하도록 트랜지션 부여 */
       transition: background-color 0.3s ease;
     }
 
-    /* 선택사항: 햄버거 호버 시 선 색상도 로고처럼 에이징 골드로 맞추고 싶을 때 */
-    
     .header-hamburger:hover span {
       background-color: #9e733b;
     }
-    
 
-    /* ==========================================================================
-       [한국어] 스플래시 오프닝 - 밝은 한지 배경 & 붉은 실 연출 스타일
-       [日本語] スプラッシュオープニング - 明るい和紙背景＆赤い糸演出スタイル
-       ========================================================================== */
+    /* 오프닝 스플래시 */
     #start-page {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
       z-index: 9999;
       display: flex;
@@ -141,17 +130,12 @@
       overflow: hidden;
     }
 
-    #start-page::before {
-      display: none;
-    }
-
     #start-page.is-hidden {
       transform: translateY(-10px);
       opacity: 0;
       pointer-events: none;
     }
 
-    /* [한국어] 붉은 실 SVG 오버레이 컨테이너 / [日本語] 赤い糸 SVG オーバーレイコンテナ */
     .thread-svg-overlay {
       position: absolute;
       top: 0;
@@ -190,8 +174,6 @@
       }
     }
 
-    /* [한국어] 오프닝 텍스트 & 로고 (밝은 배경에 맞춘 먹색 적용) */
-    /* [日本語] オープニングテキスト＆ロゴ (明るい背景に合わせた墨色適用) */
     .start-logo-box,
     .start-title-vertical,
     .start-click-hint {
@@ -212,7 +194,6 @@
       }
     }
 
-    /* [수정] 2. 오프닝 스플래시 로고 박스 스타일 */
     .start-logo-box {
       width: 80px;
       height: 80px;
@@ -247,12 +228,12 @@
       animation: startElementFadeIn 1.8s ease forwards 1.5s, pulseText 3.5s infinite ease-in-out 3.3s !important;
     }
 
-    /* [한국어] 2. 슬라이드 메뉴 로비 화면 / [日本語] 2. スライドメニューロビー画面 */
+    /* 슬라이드 메뉴 로비 */
     #lobby-screen {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
       background-color: #fbfaf7;
       z-index: 8000;
@@ -280,7 +261,6 @@
       z-index: 10;
     }
 
-    /* [수정] 3. 슬라이드 로비 로고 박스 스타일 */
     .lobby-logo-box {
       width: 75px;
       height: 75px;
@@ -398,18 +378,19 @@
       font-family: Arial, sans-serif;
     }
 
-    /* [한국어] SPA 독립 섹션 프레임 / [日本語] SPA独立セクションフレーム */
+    /* SPA 독립 섹션 프레임 */
     .section-block {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
+      width: 100%;
       height: 100vh;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.2s ease, visibility 0.2s ease;
       overflow-y: auto;
+      overflow-x: hidden;
       z-index: 100;
     }
 
@@ -420,9 +401,9 @@
       z-index: 500;
     }
 
-    /* [한국어] 공통 Hero 섹션 스타일 / [日本語] 共通 Hero セクション スタイル */
+    /* 공통 Hero 섹션 */
     .hero-section {
-      width: 100vw;
+      width: 100%;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -445,7 +426,7 @@
 
     .scroll-guide {
       position: absolute;
-      bottom: 150px;
+      bottom: 120px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -498,9 +479,9 @@
       100% { top: 100%; }
     }
 
-    /* [한국어] 1. 想い (Omoi) 전용 스타일 / [日本語] 1. 想い (Omoi) 専用スタイル */
+    /* 想い (Omoi) Section */
     .omoi-main-wrapper {
-      width: 100vw;
+      width: 100%;
       min-height: 100vh;
       position: relative;
       display: flex;
@@ -531,12 +512,12 @@
       -webkit-writing-mode: vertical-rl;
       color: #ffffff;
       height: 520px;
-      max-height: 70vh; /* 화면 높이에 맞춰 비례 축소 */
-      width: max-content !important; /* 글자 줄에 딱 맞게 폭 자동 유지 (찌그러짐 방지) */
+      max-height: 70vh;
+      width: max-content !important;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      flex-wrap: nowrap !important; /* 임의로 줄이 꺾이거나 찌그러지는 것 절대 차단 */
+      flex-wrap: nowrap !important;
       justify-content: center;
       align-items: flex-start;
     }
@@ -547,12 +528,12 @@
       letter-spacing: 6px;
       font-weight: 300;
       color: rgba(255, 255, 255, 0.95);
-      margin-left: 2.2vw; /* 간격을 화면 비율(vw)로 설정하여 비례 축소 */
-      white-space: nowrap !important; /* 줄바꿈 절대 금지 */
+      margin-left: 2.2vw;
+      white-space: nowrap !important;
       vertical-align: top;
     }
 
-   .omoi-poem-wrapper .v-line.main-title {
+    .omoi-poem-wrapper .v-line.main-title {
       font-size: 26px;
       letter-spacing: 10px;
       color: #ffffff;
@@ -569,9 +550,9 @@
       margin-left: 3.5vw;
     }
 
-    /* [한국어] 2. 技 (Waza) 전용 스타일 / [日本語] 2. 技 (Waza) 専用スタイル */
+    /* 技 (Waza) Section */
     .waza-main-wrapper {
-      width: 100vw;
+      width: 100%;
       min-height: 100vh;
       position: relative;
       display: flex;
@@ -625,9 +606,9 @@
       margin-left: 0 !important;
     }
 
-    /* [한국어] 3. お品書き (Menu) 전용 스타일 / [日本語] 3. お品書き (Menu) 専用スタイル */
+    /* お品書き (Menu) Section */
     .menu-main-wrapper {
-      width: 100vw;
+      width: 100%;
       padding: 140px 5vw 120px;
       display: flex;
       justify-content: center;
@@ -755,12 +736,9 @@
       line-height: 2;
     }
 
-    /* ==========================================================================
-       [한국어] 4. 店舗案内 (Info) 전용 스타일
-       [日本語] 4. 店舗案内 (Info) 専用スタイル
-       ========================================================================== */
+    /* 店舗案内 (Info) Section */
     .info-main-wrapper {
-      width: 100vw;
+      width: 100%;
       padding: 140px 5vw 120px;
       display: flex;
       justify-content: center;
@@ -924,12 +902,9 @@
       letter-spacing: 1px;
     }
 
-    /* ==========================================================================
-       [한국어] 5. ご予約 (Reserve) 전용 스타일
-       [日本語] 5. ご予約 (Reserve) 専用スタイル
-       ========================================================================== */
+    /* ご予約 (Reserve) Section */
     .reserve-main-wrapper {
-      width: 100vw;
+      width: 100%;
       padding: 140px 5vw 120px;
       display: flex;
       justify-content: center;
@@ -1205,7 +1180,7 @@
     }
 
     .site-footer {
-      width: 100vw;
+      width: 100%;
       background-color: #fbfaf7;
       border-top: 1px solid #e8e4dc;
       padding: 80px 5vw;
@@ -1280,15 +1255,15 @@
       font-size: 11px;
     }
 
-    /* [추가] 태블릿~중간 노트북 해상도 (769px ~ 1366px) : 잘림 방지를 위해 마진 축소 */
+    /* 태블릿 미디어 쿼리 (769px ~ 1366px) */
     @media (min-width: 769px) and (max-width: 1366px) {
       .omoi-poem-wrapper {
-        height: 440px; /* 높이만 한 단계 낮춤 */
+        height: 440px;
       }
       .omoi-poem-wrapper .v-line {
-        font-size: 13.5px; /* 글자 크기도 비례 축소 */
+        font-size: 13.5px;
         letter-spacing: 4px;
-        margin-left: 18px !important; /* 간격을 고정 px로 조여서 찌그러짐 차단 */
+        margin-left: 18px !important;
       }
       .omoi-poem-wrapper .v-line.main-title {
         font-size: 21px;
@@ -1304,53 +1279,50 @@
       }
     }
 
-   /* [한국어] 반응형 모바일 미디어 쿼리 (가로 쓰기 전환 및 모바일 최적화) */
-    /* [日本語] レスポンシブ モバイル メディアクエリ (横書き変換＆モバイル最適化) */
+    /* ==========================================================================
+       [최종 해결] 모바일 반응형 미디어 쿼리 (가로 스크롤 & 텍스트 튀어나감 완전 제거)
+       ========================================================================== */
     @media (max-width: 768px) {
 
-      /* 1. 전체 화면 가로 스크롤(좌우 흔들림) 완전 차단 */
+      /* 1. 전체 화면 가로 스크롤(좌우 덜컹거림) 물리적 차단 */
       html, body {
         overflow-x: hidden !important;
         width: 100% !important;
-        position: relative !important;
-      }
-      
-      /* 2. Waza 메인 감싸는 영역 세로 크기 해제 및 넘침 차단 */
-      .waza-main-wrapper,
-      #waza,
-      section[id*="waza"] {
-        overflow: hidden !important;
-        width: 100% !important;
         max-width: 100vw !important;
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        box-sizing: border-box !important;
       }
 
-      /* 3. Omoi & Waza 내부의 모든 그룹div 및 세로쓰기 속성 일괄 해제 (핵심 해결책) */
+      /* 2. 모든 섹션 및 메인 감싸는 컨테이너 모바일 규격 보정 */
+      .section-block,
+      .omoi-main-wrapper,
+      .waza-main-wrapper,
+      .menu-main-wrapper,
+      .info-main-wrapper,
+      .reserve-main-wrapper,
+      #waza, #omoi, #menu, #info, #reserve {
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+      }
+
+      /* 3. Omoi & Waza 글귀 컨테이너 가로 쓰기 전환 */
       .omoi-poem-wrapper,
       .waza-poem-wrapper,
       .omoi-poem-wrapper *,
       .waza-poem-wrapper * {
         writing-mode: horizontal-tb !important;
         -webkit-writing-mode: horizontal-tb !important;
-        white-space: normal !important; /* 줄바꿈 허용 */
+        direction: ltr !important;
+        white-space: normal !important; /* 자동 줄바꿈으로 튀어나감 방지 */
         word-break: keep-all !important; /* 단어 단위 정갈한 줄바꿈 */
       }
 
-      /* 4. Omoi & Waza 내부 부모 그룹div(poem-header-group 등) 모바일 정렬 해제 */
-      .omoi-poem-wrapper div,
-      .waza-poem-wrapper div {
-        display: block !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-
-      /* 5. 컨테이너 가로 쓰기 flex 배치 */
       .omoi-poem-wrapper,
       .waza-poem-wrapper {
         height: auto !important;
+        min-height: 0 !important;
         max-height: none !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -1361,12 +1333,16 @@
         text-align: center !important;
         gap: 12px !important;
         margin: 0 auto !important;
+        padding: 0 !important;
       }
 
-      /* 6. 문장 요소(.v-line) 모바일 가로글 변환 */
+      /* 4. 문장 요소를 모바일 가로글로 강제 변환 (글자 튀어나감 차단) */
       .omoi-poem-wrapper .v-line,
-      .waza-poem-wrapper .v-line {
+      .waza-poem-wrapper .v-line,
+      .v-line {
         display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
         font-size: 14px !important;
         letter-spacing: 1.5px !important;
         line-height: 1.8 !important;
@@ -1377,31 +1353,27 @@
       .omoi-poem-wrapper .v-line.main-title {
         font-size: 20px !important;
         letter-spacing: 4px !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
         color: #ffffff !important;
       }
 
       .omoi-poem-wrapper .v-line.sub-location {
         font-size: 13px !important;
-        margin-top: 0 !important;
-        margin-bottom: 16px !important;
+        margin-bottom: 12px !important;
         color: #e5d099 !important;
       }
 
       .omoi-poem-wrapper .v-line.space-left,
       .waza-poem-wrapper .v-line.space-left {
-        margin-top: 12px !important;
-        margin-left: 0 !important;
+        margin-top: 10px !important;
       }
 
-      /* 7. SCROLL 안내 위치 하단 이동 */
-      .scroll-indicator,
-      .scroll-down,
-      .hero-scroll {
-        bottom: 20px !important;
+      /* 5. 스크롤 안내 가이드 위치 하단 이동 */
+      .scroll-guide {
+        bottom: 50px !important;
       }
 
-      /* 8. 기존 레이아웃 모바일 반응형 유지 */
+      /* 6. 기존 레이아웃 모바일 반응형 유지 */
       .course-main-row { flex-direction: column; gap: 8px; }
       .course-name { font-size: 18px; }
       .course-price { font-size: 17px; }
@@ -1416,15 +1388,13 @@
       .click-option-grid-7 { grid-template-columns: repeat(4, 1fr); }
       .flatpickr-calendar { width: 320px !important; }
     }
-    
   </style>
 </head>
 <body>
 
-  <!-- [한국어] 상단 고정 헤더 / [日本語] 上部固定ヘッダー -->
+  <!-- 상단 고정 헤더 -->
   <header class="page-header">
     <div class="header-logo" onclick="goToStartPage()" title="Start Page">
-      <!-- ★★★ [SVGロゴファイル置き場 1 : 上部固定ヘッダー] ★★★ -->
       <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
     </div>
     <div class="header-hamburger" onclick="openLobby()" title="Open Menu">
@@ -1433,28 +1403,24 @@
     </div>
   </header>
 
-  <!-- [한국어] 1. 스플래시 오프닝 페이지 -->
-  <!-- [日本語] 1. スプラッシュオープニングページ -->
+  <!-- 1. 스플래시 오프닝 페이지 -->
   <div id="start-page" onclick="enterLobbyFromStart()">
-    
     <svg class="thread-svg-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none">
       <path class="red-thread-path" d="M -100,300 C 200,80 350,520 500,300 C 650,80 800,520 1100,300" />
       <path class="gold-thread-path" d="M -100,280 C 180,470 380,130 500,300 C 620,470 820,130 1100,320" />
     </svg>
 
     <div class="start-logo-box" onclick="event.stopPropagation(); goToStartPage();">
-      <!-- ★★★ [SVGロゴファイル置き場 2 : オープニングスプラッシュ画面] ★★★ -->
       <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
     </div>
     <div class="start-title-vertical">鮨と和食 人結</div>
     <div class="start-click-hint">CLICK TO ENTER</div>
   </div>
 
-  <!-- [한국어] 2. 슬라이드 메뉴 로비 화면 / [日本語] 2. スライドメニューロビー画面 -->
+  <!-- 2. 슬라이드 메뉴 로비 화면 -->
   <div id="lobby-screen">
     <header class="lobby-header">
       <div class="lobby-logo-box" onclick="goToStartPage()" title="Start Page">
-        <!-- ★★★ [SVGロゴ파일置き場 3 : スライドメニューロビー画面] ★★★ -->
         <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
       </div>
       <div class="lobby-top-right">
@@ -1484,7 +1450,7 @@
     </footer>
   </div>
 
-  <!-- [한국어] 3. 메인 콘텐츠 컨테이너 / [日本語] 3. メインコンテンツコンテナ -->
+  <!-- 3. 메인 콘텐츠 컨테이너 -->
   <main>
 
     <!-- [HTML 1] 想い (Omoi) Section -->
@@ -1989,7 +1955,6 @@
 
   </main>
 
-  <!-- [한국어] 스크립트 영역 / [日本語] スクリプト領域 -->
   <script>
     let previousSectionId = 'omoi';
 
