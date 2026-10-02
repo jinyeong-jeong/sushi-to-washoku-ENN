@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鮨と和食 人結</title>
+
+  <!-- 外部ライブラリ / 外部ライブラリ -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+
+  <style>
+    /* [한국어] 전역 스타일 및 리셋 / [日本語] グローバルスタイルとリセット */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden; /* SPA 전체 화면 고정 / SPA全体画面固定 */
+      background-color: #fbfaf7;
+      color: #111111;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", "MS Mincho", serif;
+    }
+
+    /* [한국어] 페이드인 애니메이션 / [日本語] フェードインアニメーション */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    .delay-1 { transition-delay: 0.2s; }
+    .delay-2 { transition-delay: 0.4s; }
+    .delay-3 { transition-delay: 0.6s; }
+
+    /* [한국어] 고정 헤더 / [日本語] 固定ヘッダー */
+    .page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      padding: 35px 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    /* [수정] 1. 상단 헤더 로고 박스 스타일 */
+    .header-logo {
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: opacity 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .header-logo:hover {
+      opacity: 0.8;
+    }
+
+    .header-hamburger {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px;
+      pointer-events: auto;
+      border-radius: 2px;
+      backdrop-filter: blur(6px);
+      /* 부드럽고 고급스러운 크기 확대 애니메이션 설정 */
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+      will-change: transform;
+    }
+
+    .header-hamburger:hover {
+      /* background: rgba(251, 250, 247, 1); */
+      /* 마우스 호버 시 10% 부드럽게 확대 */
+      transform: scale(1.1);
+    }
+
+    .header-hamburger span {
+      display: block;
+      width: 26px;
+      height: 1px;
+      background-color: #111111;
+      /* 선 자체도 호버 시 유연하게 반응하도록 트랜지션 부여 */
+      transition: background-color 0.3s ease;
+    }
+
+    /* 선택사항: 햄버거 호버 시 선 색상도 로고처럼 에이징 골드로 맞추고 싶을 때 */
+    
+    .header-hamburger:hover span {
+      background-color: #9e733b;
+    }
+    
+
+    /* ==========================================================================
+       [한국어] 스플래시 오프닝 - 밝은 한지 배경 & 붉은 실 연출 스타일
+       [日本語] スプラッシュオープニング - 明るい和紙背景＆赤い糸演出スタイル
+       ========================================================================== */
+    #start-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      background-color: #f5f2eb; 
+      transition: transform 2.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 2.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+      overflow: hidden;
+    }
+
+    #start-page::before {
+      display: none;
+    }
+
+    #start-page.is-hidden {
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* [한국어] 붉은 실 SVG 오버레이 컨테이너 / [日本語] 赤い糸 SVG オーバーレイコンテナ */
+    .thread-svg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .red-thread-path {
+      stroke: #dc9898;
+      stroke-width: 2;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      animation: drawThread 3.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      filter: drop-shadow(0 2px 5px rgba(168, 46, 46, 0.25));
+    }
+
+    .gold-thread-path {
+      stroke: #e5d099;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      animation: drawThread 3.8s cubic-bezier(0.25, 1, 0.5, 1) 0.3s forwards;
+      filter: drop-shadow(0 2px 5px rgba(191, 160, 84, 0.3));
+    }
+
+    @keyframes drawThread {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    /* [한국어] 오프닝 텍스트 & 로고 (밝은 배경에 맞춘 먹색 적용) */
+    /* [日本語] オープニングテキスト＆ロゴ (明るい背景に合わせた墨色適用) */
+    .start-logo-box,
+    .start-title-vertical,
+    .start-click-hint {
+      position: relative;
+      z-index: 3;
+      opacity: 0;
+      animation: startElementFadeIn 1.8s ease forwards 0.8s;
+    }
+
+    @keyframes startElementFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* [수정] 2. 오프닝 스플래시 로고 박스 스타일 */
+    .start-logo-box {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .start-title-vertical {
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      font-size: 21px;
+      letter-spacing: 12px;
+      color: #111111;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .start-click-hint {
+      position: absolute;
+      bottom: 50px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #888888;
+      animation: startElementFadeIn 1.8s ease forwards 1.5s, pulseText 3.5s infinite ease-in-out 3.3s !important;
+    }
+
+    /* [한국어] 2. 슬라이드 메뉴 로비 화면 / [日本語] 2. スライドメニューロビー画面 */
+    #lobby-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #fbfaf7;
+      z-index: 8000;
+      padding: 50px 6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #lobby-screen.is-closed {
+      transform: translateY(-20px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .lobby-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 10;
+    }
+
+    /* [수정] 3. 슬라이드 로비 로고 박스 스타일 */
+    .lobby-logo-box {
+      width: 75px;
+      height: 75px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lobby-logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .lobby-top-right {
+      display: flex;
+      align-items: center;
+      gap: 35px;
+    }
+
+    .lang-select {
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: #333333;
+    }
+
+    .lang-select span {
+      cursor: pointer;
+      transition: color 0.4s;
+    }
+
+    .lang-select span:hover {
+      color: #9e733b;
+    }
+
+    .close-btn {
+      font-size: 22px;
+      color: #333333;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      color: #9e733b;
+      transform: rotate(90deg);
+    }
+
+    .lobby-menu-nav {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+      gap: 5.5vw;
+      width: auto;
+      height: 220px;
+    }
+
+    .lobby-menu-item {
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      font-size: 18px;
+      letter-spacing: 8px;
+      color: #111111;
+      text-decoration: none;
+      font-weight: 300;
+      white-space: nowrap;
+      height: 100%;
+      display: inline-block;
+      transition: color 0.4s ease, transform 0.4s ease;
+      cursor: pointer;
+    }
+
+    .lobby-menu-item:hover {
+      color: #9e733b;
+      transform: translateY(-4px);
+    }
+
+    .lobby-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 10;
+    }
+
+    .lobby-sns {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .lobby-sns a {
+      color: #444444;
+      font-size: 18px;
+      text-decoration: none;
+      transition: color 0.4s ease;
+    }
+
+    .lobby-sns a:hover {
+      color: #9e733b;
+    }
+
+    .lobby-copyright {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #888888;
+      font-family: Arial, sans-serif;
+    }
+
+    /* [한국어] SPA 독립 섹션 프레임 / [日本語] SPA独立セクションフレーム */
+    .section-block {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .section-block.is-active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      z-index: 500;
+    }
+
+    /* [한국어] 공통 Hero 섹션 스타일 / [日本語] 共通 Hero セクション スタイル */
+    .hero-section {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .hero-title-vertical {
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      font-size: 26px;
+      letter-spacing: 12px;
+      color: #111111;
+      font-weight: 300;
+      text-align: center;
+      margin-right: -12px;
+      display: inline-block;
+    }
+
+    .scroll-guide {
+      position: absolute;
+      bottom: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .scroll-text {
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      font-size: 11px;
+      letter-spacing: 6px;
+      text-align: center;
+      margin-right: -6px;
+      display: inline-block;
+      background: linear-gradient(180deg, #999999 0%, #9e733b 40%, #e28b38 50%, #999999 100%);
+      background-size: 100% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: scrollTextFlow 2.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollTextFlow {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 0% 100%; }
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 45px;
+      background: rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, transparent 0%, #9e733b 50%, transparent 100%);
+      animation: scrollLineFlow 2.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollLineFlow {
+      0% { top: -100%; }
+      100% { top: 100%; }
+    }
+
+    /* [한국어] 1. 想い (Omoi) 전용 스타일 / [日本語] 1. 想い (Omoi) 専用スタイル */
+    .omoi-main-wrapper {
+      width: 100vw;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 140px 4vw 100px;
+      background-image: url('./img/enn1.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .omoi-main-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+
+    .omoi-poem-wrapper {
+      position: relative;
+      z-index: 2;
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      color: #ffffff;
+      height: 520px;
+      max-height: 70vh; /* 화면 높이에 맞춰 비례 축소 */
+      width: max-content !important; /* 글자 줄에 딱 맞게 폭 자동 유지 (찌그러짐 방지) */
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap !important; /* 임의로 줄이 꺾이거나 찌그러지는 것 절대 차단 */
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .omoi-poem-wrapper .v-line {
+      display: inline-block;
+      font-size: 16px;
+      letter-spacing: 6px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.95);
+      margin-left: 2.2vw; /* 간격을 화면 비율(vw)로 설정하여 비례 축소 */
+      white-space: nowrap !important; /* 줄바꿈 절대 금지 */
+      vertical-align: top;
+    }
+
+   .omoi-poem-wrapper .v-line.main-title {
+      font-size: 26px;
+      letter-spacing: 10px;
+      color: #ffffff;
+      margin-left: 3.5vw;
+    }
+
+    .omoi-poem-wrapper .v-line.sub-location {
+      margin-top: 50px;
+      margin-left: 3.5vw;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .omoi-poem-wrapper .v-line.space-left {
+      margin-left: 3.5vw;
+    }
+
+    /* [한국어] 2. 技 (Waza) 전용 스타일 / [日本語] 2. 技 (Waza) 専用スタイル */
+    .waza-main-wrapper {
+      width: 100vw;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 140px 5vw 100px;
+      background-image: url('./img/enn5.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .waza-main-wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+
+    .waza-poem-wrapper {
+      position: relative;
+      z-index: 2;
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      color: #ffffff;
+      height: 480px;
+      display: inline-block;
+      margin: 0 auto;
+    }
+
+    .waza-poem-wrapper .v-line {
+      display: inline-block;
+      font-size: 16px;
+      letter-spacing: 6px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.95);
+      margin-left: 3.2vw;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+
+    .waza-poem-wrapper .v-line.space-left {
+      margin-left: 5vw;
+    }
+
+    .waza-poem-wrapper .v-line.last-line {
+      margin-left: 0 !important;
+    }
+
+    /* [한국어] 3. お品書き (Menu) 전용 스타일 / [日本語] 3. お品書き (Menu) 専用スタイル */
+    .menu-main-wrapper {
+      width: 100vw;
+      padding: 140px 5vw 120px;
+      display: flex;
+      justify-content: center;
+      background-color: #fbfaf7;
+    }
+
+    .menu-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .menu-section-header {
+      text-align: center;
+      margin-bottom: 90px;
+    }
+
+    .menu-section-sub-title {
+      font-size: 16px;
+      letter-spacing: 6px;
+      color: #9e733b;
+      margin-bottom: 16px;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+
+    .menu-section-main-title {
+      font-size: 26px;
+      letter-spacing: 8px;
+      color: #111111;
+      font-weight: 300;
+    }
+
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 75px;
+      margin-bottom: 60px;
+    }
+
+    .course-item {
+      border-bottom: 1px solid #e2ded5;
+      padding-bottom: 40px;
+      transition: border-color 0.4s ease;
+    }
+
+    .course-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .course-name {
+      font-size: 22px;
+      letter-spacing: 4px;
+      color: #111111;
+      font-weight: 400;
+    }
+
+    .course-price {
+      font-size: 20px;
+      letter-spacing: 2px;
+      color: #9e733b;
+      font-family: "Hiragino Mincho ProN", Georgia, serif;
+    }
+
+    .course-desc-box {
+      margin-top: 18px;
+      font-size: 13.5px;
+      letter-spacing: 2px;
+      color: #666666;
+      line-height: 1.8;
+      opacity: 0.85;
+    }
+
+    .course-notice-box {
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #888888;
+      line-height: 2.2;
+      margin-bottom: 140px;
+    }
+
+    .single-menu-section {
+      border-top: 1px solid #e8e4dc;
+      padding-top: 120px;
+    }
+
+    .tab-header {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-bottom: 80px;
+    }
+
+    .tab-btn {
+      font-size: 18px;
+      letter-spacing: 5px;
+      color: #999999;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      padding-bottom: 10px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.4s ease;
+    }
+
+    .tab-btn.active {
+      color: #111111;
+      border-bottom-color: #9e733b;
+    }
+
+    .single-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 65px;
+    }
+
+    .single-notice-box {
+      margin-top: 90px;
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 2.5px;
+      color: #888888;
+      line-height: 2;
+    }
+
+    /* ==========================================================================
+       [한국어] 4. 店舗案内 (Info) 전용 스타일
+       [日本語] 4. 店舗案内 (Info) 専用スタイル
+       ========================================================================== */
+    .info-main-wrapper {
+      width: 100vw;
+      padding: 140px 5vw 120px;
+      display: flex;
+      justify-content: center;
+      background-color: #fbfaf7;
+    }
+
+    .info-container {
+      width: 100%;
+      max-width: 950px;
+    }
+
+    .info-section-header {
+      text-align: center;
+      margin-bottom: 90px;
+    }
+
+    .info-section-sub-title {
+      font-size: 13px;
+      letter-spacing: 6px;
+      color: #9e733b;
+      margin-bottom: 16px;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+
+    .info-section-main-title {
+      font-size: 26px;
+      letter-spacing: 8px;
+      color: #111111;
+      font-weight: 300;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 60px;
+      align-items: stretch;
+    }
+
+    .info-left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      height: 100%;
+    }
+
+    .tel-card {
+      border: 1px solid #e2ded5;
+      background-color: rgba(255, 255, 255, 0.5);
+      padding: 35px 25px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .tel-sub {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #777777;
+      margin-bottom: 12px;
+    }
+
+    .tel-number {
+      font-size: 24px;
+      letter-spacing: 2px;
+      color: #9e733b;
+      font-family: "Hiragino Mincho ProN", Georgia, serif;
+      margin-bottom: 14px;
+      display: block;
+      text-decoration: none;
+    }
+
+    .tel-hours {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #666666;
+    }
+
+    .building-card {
+      border: 1px solid #e2ded5;
+      position: relative;
+      padding: 20px 25px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+      text-align: left;
+      font-size: 13.5px;
+      letter-spacing: 1.5px;
+      color: #fbfaf7;
+      line-height: 2.2;
+      overflow: hidden;
+      background-image: url('./img/enn6.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .building-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .building-card-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .building-card strong {
+      color: #b78d57;
+      font-weight: 400;
+    }
+
+    .nobreak-line {
+      white-space: nowrap;
+    }
+
+    .info-table {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      padding: 22px 0;
+      border-bottom: 1px dashed #e2ded5;
+      font-size: 13.5px;
+      line-height: 1.9;
+    }
+
+    .info-row:first-child {
+      border-top: 1px solid #9e733b;
+    }
+
+    .info-row:last-child {
+      border-bottom: 1px solid #e2ded5;
+    }
+
+    .info-label {
+      color: #9e733b;
+      letter-spacing: 4px;
+      font-weight: 400;
+    }
+
+    .info-value {
+      color: #222222;
+      letter-spacing: 1.5px;
+    }
+
+    .info-note {
+      font-size: 11.5px;
+      color: #888888;
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    /* ==========================================================================
+       [한국어] 5. ご予約 (Reserve) 전용 스타일
+       [日本語] 5. ご予約 (Reserve) 専用スタイル
+       ========================================================================== */
+    .reserve-main-wrapper {
+      width: 100vw;
+      padding: 140px 5vw 120px;
+      display: flex;
+      justify-content: center;
+      background-color: #fbfaf7;
+    }
+
+    .reserve-container {
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .reserve-section-header {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .reserve-section-sub-title {
+      font-size: 13px;
+      letter-spacing: 6px;
+      color: #9e733b;
+      margin-bottom: 16px;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+
+    .reserve-section-main-title {
+      font-size: 26px;
+      letter-spacing: 8px;
+      color: #111111;
+      font-weight: 300;
+    }
+
+    .external-reserve-box {
+      border: 1px solid #e2ded5;
+      background-color: rgba(255, 255, 255, 0.6);
+      padding: 45px 30px;
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .ext-box-title {
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: #9e733b;
+      margin-bottom: 15px;
+    }
+
+    .ext-box-desc {
+      font-size: 12.5px;
+      letter-spacing: 1.5px;
+      color: #666666;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .ext-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .ext-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 220px;
+      height: 50px;
+      border: 1px solid #9e733b;
+      background-color: #ffffff;
+      color: #111111;
+      font-size: 13.5px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    }
+
+    .ext-btn:hover {
+      background-color: #9e733b;
+      color: #ffffff;
+    }
+
+    .divider-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 60px 0;
+      position: relative;
+    }
+
+    .divider-row::before,
+    .divider-row::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: #e2ded5;
+    }
+
+    .divider-text {
+      padding: 0 25px;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #777777;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 35px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-label-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      letter-spacing: 3px;
+      color: #222222;
+    }
+
+    .required-badge {
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: #ffffff;
+      background-color: #9e733b;
+      padding: 2px 8px;
+      border-radius: 2px;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 52px;
+      padding: 0 18px;
+      border: 1px solid #e2ded5;
+      background-color: #ffffff;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 13.5px;
+      letter-spacing: 1.5px;
+      color: #222222;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: #9e733b;
+    }
+
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e733b'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 18px center;
+      background-size: 18px;
+      cursor: pointer;
+    }
+
+    .date-input-large {
+      height: 60px;
+      font-size: 16px;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+
+    .flatpickr-calendar {
+      width: 380px !important;
+      background: #fbfaf7 !important;
+      border: 1px solid #e2ded5 !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif !important;
+      padding: 15px !important;
+    }
+
+    .flatpickr-months .flatpickr-month {
+      color: #111111 !important;
+      fill: #111111 !important;
+      height: 45px !important;
+    }
+
+    .flatpickr-current-month {
+      font-size: 16px !important;
+      font-weight: 400 !important;
+      padding-top: 5px !important;
+    }
+
+    .flatpickr-weekday {
+      color: #9e733b !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    .flatpickr-day {
+      height: 45px !important;
+      line-height: 45px !important;
+      font-size: 15px !important;
+      color: #333333 !important;
+      border-radius: 4px !important;
+    }
+
+    .flatpickr-day.selected {
+      background: #9e733b !important;
+      border-color: #9e733b !important;
+      color: #ffffff !important;
+    }
+
+    .flatpickr-day:hover {
+      background: #eeebe3 !important;
+    }
+
+    .click-option-grid-7 {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .click-option-item input[type="radio"] {
+      display: none;
+    }
+
+    .click-option-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      border: 1px solid #e2ded5;
+      background-color: #ffffff;
+      font-size: 13.5px;
+      letter-spacing: 1px;
+      color: #333333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      user-select: none;
+    }
+
+    .click-option-label:hover {
+      border-color: #9e733b;
+    }
+
+    .click-option-item input[type="radio"]:checked + .click-option-label {
+      border-color: #9e733b;
+      background-color: #9e733b;
+      color: #ffffff;
+    }
+
+    .form-submit-btn {
+      margin-top: 30px;
+      width: 100%;
+      height: 56px;
+      background-color: #111111;
+      color: #ffffff;
+      border: none;
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 14px;
+      letter-spacing: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-submit-btn:hover {
+      background-color: #9e733b;
+    }
+
+    .site-footer {
+      width: 100vw;
+      background-color: #fbfaf7;
+      border-top: 1px solid #e8e4dc;
+      padding: 80px 5vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-nav-vertical {
+      display: flex;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-nav-item {
+      writing-mode: vertical-rl;
+      -webkit-writing-mode: vertical-rl;
+      font-size: 16px;
+      letter-spacing: 8px;
+      color: #222222;
+      text-decoration: none;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .footer-nav-item:hover {
+      color: #9e733b;
+    }
+
+    .footer-bottom {
+      width: 100%;
+      max-width: 850px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #777777;
+      padding-top: 30px;
+      border-top: 1px solid #eeebe3;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer-sns {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .footer-sns a {
+      color: #777777;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-sns a:hover {
+      color: #9e733b;
+      transform: translateY(-2px);
+    }
+
+    .footer-copyright, .footer-privacy {
+      font-family: Arial, sans-serif;
+      color: #777777;
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    /* [추가] 태블릿~중간 노트북 해상도 (769px ~ 1366px) : 잘림 방지를 위해 마진 축소 */
+    @media (min-width: 769px) and (max-width: 1366px) {
+      .omoi-poem-wrapper {
+        height: 440px; /* 높이만 한 단계 낮춤 */
+      }
+      .omoi-poem-wrapper .v-line {
+        font-size: 13.5px; /* 글자 크기도 비례 축소 */
+        letter-spacing: 4px;
+        margin-left: 18px !important; /* 간격을 고정 px로 조여서 찌그러짐 차단 */
+      }
+      .omoi-poem-wrapper .v-line.main-title {
+        font-size: 21px;
+        letter-spacing: 8px;
+        margin-left: 28px !important;
+      }
+      .omoi-poem-wrapper .v-line.sub-location {
+        margin-top: 35px;
+        margin-left: 28px !important;
+      }
+      .omoi-poem-wrapper .v-line.space-left {
+        margin-left: 28px !important;
+      }
+    }
+
+   /* [한국어] 반응형 모바일 미디어 쿼리 (가로 쓰기 전환 및 모바일 최적화) */
+    /* [日本語] レスポンシブ モバイル メディアクエリ (横書き変換＆モバイル最適化) */
+    @media (max-width: 768px) {
+      
+      /* 1. 모바일 햄버거 버튼 가시성 확보 */
+      /* .header-hamburger {
+        background: rgba(0, 0, 0, 0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+      }
+      .header-hamburger span {
+        background-color: #ffffff !important;
+      } */
+
+      /* 2. 想い/技 글귀 컨테이너 가로 쓰기(Horizontal) 전환 */
+      .omoi-poem-wrapper,
+      .waza-poem-wrapper {
+        writing-mode: horizontal-tb !important;
+        -webkit-writing-mode: horizontal-tb !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 90vw !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 12px !important;
+      }
+
+      /* 3. 글귀 각 문장별 스타일 최적화 */
+      .omoi-poem-wrapper .v-line,
+      .waza-poem-wrapper .v-line {
+        display: block !important;
+        font-size: 14px !important;
+        letter-spacing: 2px !important;
+        line-height: 1.8 !important;
+        margin-left: 0 !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+      }
+
+      .omoi-poem-wrapper .v-line.main-title {
+        font-size: 20px !important;
+        letter-spacing: 4px !important;
+        margin-bottom: 8px !important;
+        color: #ffffff !important;
+      }
+
+      .omoi-poem-wrapper .v-line.sub-location {
+        font-size: 13px !important;
+        margin-top: 0 !important;
+        margin-bottom: 16px !important;
+        color: #e5d099 !important;
+      }
+
+      .omoi-poem-wrapper .v-line.space-left,
+      .waza-poem-wrapper .v-line.space-left {
+        margin-top: 14px !important;
+        margin-left: 0 !important;
+      }
+
+      /* 4. 기존 레이아웃 모바일 반응형 유지 */
+      .course-main-row { flex-direction: column; gap: 8px; }
+      .course-name { font-size: 18px; }
+      .course-price { font-size: 17px; }
+      .tab-header { gap: 25px; }
+      .tab-btn { font-size: 15px; letter-spacing: 3px; }
+
+      .info-grid { grid-template-columns: 1fr; gap: 50px; }
+      .info-row { grid-template-columns: 90px 1fr; }
+      .building-card { min-height: 200px; }
+      .nobreak-line { white-space: normal; }
+
+      .click-option-grid-7 { grid-template-columns: repeat(4, 1fr); }
+      .flatpickr-calendar { width: 320px !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- [한국어] 상단 고정 헤더 / [日本語] 上部固定ヘッダー -->
+  <header class="page-header">
+    <div class="header-logo" onclick="goToStartPage()" title="Start Page">
+      <!-- ★★★ [SVGロゴファイル置き場 1 : 上部固定ヘッダー] ★★★ -->
+      <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+    </div>
+    <div class="header-hamburger" onclick="openLobby()" title="Open Menu">
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- [한국어] 1. 스플래시 오프닝 페이지 -->
+  <!-- [日本語] 1. スプラッシュオープニングページ -->
+  <div id="start-page" onclick="enterLobbyFromStart()">
+    
+    <svg class="thread-svg-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none">
+      <path class="red-thread-path" d="M -100,300 C 200,80 350,520 500,300 C 650,80 800,520 1100,300" />
+      <path class="gold-thread-path" d="M -100,280 C 180,470 380,130 500,300 C 620,470 820,130 1100,320" />
+    </svg>
+
+    <div class="start-logo-box" onclick="event.stopPropagation(); goToStartPage();">
+      <!-- ★★★ [SVGロゴファイル置き場 2 : オープニングスプラッシュ画面] ★★★ -->
+      <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+    </div>
+    <div class="start-title-vertical">鮨と和食 人結</div>
+    <div class="start-click-hint">CLICK TO ENTER</div>
+  </div>
+
+  <!-- [한국어] 2. 슬라이드 메뉴 로비 화면 / [日本語] 2. スライドメニューロビー画面 -->
+  <div id="lobby-screen">
+    <header class="lobby-header">
+      <div class="lobby-logo-box" onclick="goToStartPage()" title="Start Page">
+        <!-- ★★★ [SVGロゴ파일置き場 3 : スライドメニューロビー画面] ★★★ -->
+        <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+      </div>
+      <div class="lobby-top-right">
+        <div class="lang-select">
+          <span>EN</span> / <span>JA</span>
+        </div>
+        <button class="close-btn" onclick="closeLobby()" title="Close">✕</button>
+      </div>
+    </header>
+
+    <nav class="lobby-menu-nav">
+      <a onclick="navigateToSection('omoi')" class="lobby-menu-item">想い</a>
+      <a onclick="navigateToSection('waza')" class="lobby-menu-item">技</a>
+      <a onclick="navigateToSection('menu')" class="lobby-menu-item">お品書き</a>
+      <a onclick="navigateToSection('info')" class="lobby-menu-item">店舗案内</a>
+      <a onclick="navigateToSection('reserve')" class="lobby-menu-item">ご予約</a>
+    </nav>
+
+    <footer class="lobby-footer">
+      <div class="lobby-sns">
+        <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+      <div class="lobby-copyright">
+        © 2026 SUSHITOWASHOKU ENN. Privacy policy
+      </div>
+    </footer>
+  </div>
+
+  <!-- [한국어] 3. 메인 콘텐츠 컨테이너 / [日本語] 3. メインコンテンツコンテナ -->
+  <main>
+
+    <!-- [HTML 1] 想い (Omoi) Section -->
+    <section id="omoi" class="section-block is-active">
+      <div class="hero-section">
+        <h1 class="hero-title-vertical reveal">想い</h1>
+        <div class="scroll-guide reveal delay-1">
+          <span class="scroll-text">スクロール</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+
+      <div class="omoi-main-wrapper">
+        <div class="omoi-poem-wrapper reveal delay-1">
+          <div class="v-line main-title">「一期一会を、結ぶ」</div>
+          <div class="v-line sub-location">仙台・国分町</div>
+          <div class="v-line">静寂が満ちる凛とした空間。</div>
+          <div class="v-line">私どもがお届けするのは</div>
+          <div class="v-line">単なる食事ではなく</div>
+          <div class="v-line">時を忘れるひとときです。</div>
+          <div class="v-line space-left">東北の豊かな恵みと</div>
+          <div class="v-line">江戸前の粋を宿した一貫。</div>
+          <div class="v-line space-left">一日四組のお客様のためだけに</div>
+          <div class="v-line">研ぎ澄ました技と心を尽くします。</div>
+          <div class="v-line space-left">人と人、人と旨味が結ばれる</div>
+          <div class="v-line">特別な宴をお楽しみください。</div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <nav class="footer-nav-vertical reveal">
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+        </nav>
+
+        <div class="footer-bottom reveal">
+          <div class="footer-sns">
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          <div class="footer-copyright">
+            © 2026 SUSHITOWASHOKU ENN. All rights reserved.
+          </div>
+          <a href="#" class="footer-privacy">Privacy Policy Powered by S2</a>
+        </div>
+      </footer>
+    </section>
+
+    <!-- [HTML 2] 技 (Waza) Section -->
+    <section id="waza" class="section-block">
+      <div class="hero-section">
+        <h1 class="hero-title-vertical reveal">技</h1>
+        <div class="scroll-guide reveal delay-1">
+          <span class="scroll-text">スクロール</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+
+      <div class="waza-main-wrapper">
+        <div class="waza-poem-wrapper reveal delay-1">
+          <div class="v-line">伝統的な江戸前仕立て。</div>
+          <div class="v-line">全国各地の独自のルートより</div>
+          <div class="v-line">「人結」のためだけに選び抜かれた鮮魚。</div>
+          <div class="v-line">素材の旨味を極限まで引き出す丁寧な仕込みと</div>
+          <div class="v-line">赤酢の酸味とコクを効かせた地元・ササニシキのしゃり。</div>
+          <div class="v-line space-left last-line">一貫に宿る職人の技と美学をお楽しみください。</div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <nav class="footer-nav-vertical reveal">
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+        </nav>
+
+        <div class="footer-bottom reveal">
+          <div class="footer-sns">
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          <div class="footer-copyright">
+            © 2026 SUSHITOWASHOKU ENN. All rights reserved.
+          </div>
+          <a href="#" class="footer-privacy">Privacy Policy Powered by S2</a>
+        </div>
+      </footer>
+    </section>
+
+    <!-- [HTML 3] お品書き (Menu) Section -->
+    <section id="menu" class="section-block">
+      <div class="hero-section">
+        <h1 class="hero-title-vertical reveal">お品書き</h1>
+        <div class="scroll-guide reveal delay-1">
+          <span class="scroll-text">スクロール</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+
+      <div class="menu-main-wrapper">
+        <div class="menu-container">
+          
+          <div class="menu-section-header reveal">
+            <div class="menu-section-sub-title">おまかせ</div>
+            <h2 class="menu-section-main-title">厳選した旬の味覚を愉しむ</h2>
+          </div>
+
+          <div class="course-list">
+            <div class="course-item reveal delay-1">
+              <div class="course-main-row">
+                <h3 class="course-name">極み鮨コース</h3>
+                <div class="course-price">¥11,000</div>
+              </div>
+              <div class="course-desc-box">
+                先付・前菜・逸品・江戸前仕立て鮨十貫・甘味
+              </div>
+            </div>
+
+            <div class="course-item reveal delay-2">
+              <div class="course-main-row">
+                <h3 class="course-name">SPECIAL お任せコース</h3>
+                <div class="course-price">¥22,000</div>
+              </div>
+              <div class="course-desc-box">
+                先付・お造り・メイン（ズワイ蟹/仙台牛）・極み鮨十貫・甘味
+              </div>
+            </div>
+
+            <div class="course-item reveal delay-3">
+              <div class="course-main-row">
+                <h3 class="course-name">大切なお客さまのためのコース</h3>
+                <div class="course-price">¥28,500</div>
+              </div>
+              <div class="course-desc-box">
+                先付・前菜・温物・極上鮨八貫・甘味（一日四組限定）
+              </div>
+            </div>
+          </div>
+
+          <div class="course-notice-box reveal">
+            ※ 表示価格は全て税込価格でございます。<br>
+            ※ 季節や仕入れ状況により、お料理・お酒の内容が日々異なります。
+          </div>
+
+          <div class="single-menu-section reveal">
+            <div class="menu-section-header">
+              <div class="menu-section-sub-title">一品 と 銘酒</div>
+              <h2 class="menu-section-main-title">一品と厳選の銘酒</h2>
+            </div>
+
+            <div class="tab-header">
+              <button class="tab-btn active" onclick="switchCategory(event, 'food')">お料理（一品）</button>
+              <button class="tab-btn" onclick="switchCategory(event, 'drink')">お飲み物（銘酒）</button>
+            </div>
+
+            <div class="single-menu-list" id="singleMenuList">
+              <!-- Dynamic Content -->
+            </div>
+
+            <div class="single-notice-box">
+              ※ このほかにも、季節の限定お料理や厳選したお酒を多数ご用意しております。
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <nav class="footer-nav-vertical reveal">
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+        </nav>
+
+        <div class="footer-bottom reveal">
+          <div class="footer-sns">
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          <div class="footer-copyright">
+            © 2026 SUSHITOWASHOKU ENN. All rights reserved.
+          </div>
+          <a href="#" class="footer-privacy">Privacy Policy Powered by S2</a>
+        </div>
+      </footer>
+    </section>
+
+    <!-- [HTML 4] 店舗案内 (Info) Section -->
+    <section id="info" class="section-block">
+      <div class="hero-section">
+        <h1 class="hero-title-vertical reveal">店舗案内</h1>
+        <div class="scroll-guide reveal delay-1">
+          <span class="scroll-text">スクロール</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+
+      <div class="info-main-wrapper">
+        <div class="info-container">
+          
+          <div class="info-section-header reveal">
+            <div class="info-section-sub-title">店舗案内</div>
+            <h2 class="info-section-main-title">店舗情報</h2>
+          </div>
+
+          <div class="info-grid reveal delay-1">
+            
+            <div class="info-left-panel">
+              <div class="tel-card">
+                <div class="tel-sub">お電話での御予約・お問い合わせ</div>
+                <a href="tel:0222658388" class="tel-number">022-265-8388</a>
+                <div class="tel-hours">営業時間 17:30 〜 23:00</div>
+              </div>
+
+              <div class="building-card">
+                <div class="building-card-content">
+                  当店は<br>
+                  <span class="nobreak-line"><strong>「DK一番町ビル 1F」</strong> です</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-table">
+              
+              <div class="info-row">
+                <div class="info-label">店内</div>
+                <div class="info-value">鮨と和食 人結（えん）</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">住所</div>
+                <div class="info-value">
+                  〒980-0811<br>
+                  宮城県仙台市青葉区一番町2-7-9 DK一番町ビル 1F
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">アクセス</div>
+                <div class="info-value">
+                  仙台市営地下鉄東西線「青葉通一番町駅」南1口より徒歩3分<br>
+                  JR仙石線「あおば通駅」徒歩9分
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">営業時間</div>
+                <div class="info-value">17:30 〜 23:00</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">定休日</div>
+                <div class="info-value">月曜日</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">駐車場</div>
+                <div class="info-value">
+                  無し
+                  <div class="info-note">※近隣にコインパーキングがございます。</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">貸切</div>
+                <div class="info-value">
+                  可
+                  <div class="info-note">※詳しくは店舗へご相談ください / 1日4組限定</div>
+                </div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">カード</div>
+                <div class="info-value">可（VISA, Master, JCB, AMEX）</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">QR決済</div>
+                <div class="info-value">不可</div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <nav class="footer-nav-vertical reveal">
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+        </nav>
+
+        <div class="footer-bottom reveal">
+          <div class="footer-sns">
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          <div class="footer-copyright">
+            © 2026 SUSHITOWASHOKU ENN. All rights reserved.
+          </div>
+          <a href="#" class="footer-privacy">Privacy Policy Powered by S2</a>
+        </div>
+      </footer>
+    </section>
+
+    <!-- [HTML 5] ご予約・お問い合わせ (Reserve) Section -->
+    <section id="reserve" class="section-block">
+      <div class="hero-section">
+        <h1 class="hero-title-vertical reveal">ご予約</h1>
+        <div class="scroll-guide reveal delay-1">
+          <span class="scroll-text">スクロール</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+
+      <div class="reserve-main-wrapper">
+        <div class="reserve-container">
+          
+          <div class="reserve-section-header reveal">
+            <div class="reserve-section-sub-title">ご予約</div>
+            <h2 class="reserve-section-main-title">ご予約・お問い合わせ</h2>
+          </div>
+
+          <div class="external-reserve-box reveal delay-1">
+            <div class="ext-box-title">【各種予約サイトをご利用の方】</div>
+            <div class="ext-box-desc">
+              ポイントのご利用・各種会員特典を希望されるお客様は、<br>
+              下記提携予約サイトよりご予約をお願いいたします。
+            </div>
+            <div class="ext-btn-group">
+              <a href="#" class="ext-btn" target="_blank">ヒトサラで予約 ➔</a>
+              <a href="#" class="ext-btn" target="_blank">一休.comで予約 ➔</a>
+            </div>
+          </div>
+
+          <div class="divider-row reveal">
+            <span class="divider-text">または WEB直接お問い合わせ</span>
+          </div>
+
+          <form class="contact-form reveal delay-1" onsubmit="event.preventDefault(); alert('お問い合わせを受け付けました。');">
+            
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">お名前</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <input type="text" class="form-input" placeholder="例）サンプル 太郎" required>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">お電話番号</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <input type="tel" class="form-input" placeholder="090-xxxx-xxxx" required>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">メールアドレス</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <input type="email" class="form-input" placeholder="xxxx@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">ご希望のコース</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <select class="form-input form-select" required>
+                <option value="" disabled selected>コースをお選びください</option>
+                <option value="seat_only">席のみのご予約（当日お選びいただけます）</option>
+                <option value="course_11000">極み鮨コース（¥11,000）</option>
+                <option value="course_22000">SPECIAL お任せコース（¥22,000）</option>
+                <option value="course_28500">大切なお客さまのためのコース（¥28,500）</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">予約日</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <input type="text" id="customDatePicker" class="form-input date-input-large" placeholder="日付を選択してください" readonly required>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">人数</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <div class="click-option-grid-7">
+                <div class="click-option-item">
+                  <input type="radio" id="p2" name="people_count" value="2名" checked required>
+                  <label for="p2" class="click-option-label">2名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p3" name="people_count" value="3名">
+                  <label for="p3" class="click-option-label">3名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p4" name="people_count" value="4名">
+                  <label for="p4" class="click-option-label">4名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p5" name="people_count" value="5名">
+                  <label for="p5" class="click-option-label">5名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p6" name="people_count" value="6名">
+                  <label for="p6" class="click-option-label">6名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p7" name="people_count" value="7名">
+                  <label for="p7" class="click-option-label">7名</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="p8" name="people_count" value="8名">
+                  <label for="p8" class="click-option-label">8名</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">予約時間</label>
+                <span class="required-badge">必須</span>
+              </div>
+              <div class="click-option-grid-7">
+                <div class="click-option-item">
+                  <input type="radio" id="t1" name="reserve_time" value="17:30" required>
+                  <label for="t1" class="click-option-label">17:30</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t2" name="reserve_time" value="18:00">
+                  <label for="t2" class="click-option-label">18:00</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t3" name="reserve_time" value="18:30">
+                  <label for="t3" class="click-option-label">18:30</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t4" name="reserve_time" value="19:00">
+                  <label for="t4" class="click-option-label">19:00</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t5" name="reserve_time" value="19:30">
+                  <label for="t5" class="click-option-label">19:30</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t6" name="reserve_time" value="20:00">
+                  <label for="t6" class="click-option-label">20:00</label>
+                </div>
+                <div class="click-option-item">
+                  <input type="radio" id="t7" name="reserve_time" value="20:30">
+                  <label for="t7" class="click-option-label">20:30</label>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="form-submit-btn">送信する</button>
+
+          </form>
+
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <nav class="footer-nav-vertical reveal">
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+        </nav>
+
+        <div class="footer-bottom reveal">
+          <div class="footer-sns">
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+          <div class="footer-copyright">
+            © 2026 SUSHITOWASHOKU ENN. All rights reserved.
+          </div>
+          <a href="#" class="footer-privacy">Privacy Policy Powered by S2</a>
+        </div>
+      </footer>
+    </section>
+
+  </main>
+
+  <!-- [한국어] 스크립트 영역 / [日本語] スクリプト領域 -->
+  <script>
+    let previousSectionId = 'omoi';
+
+    const singleMenuData = {
+      food: [
+        { name: '江戸前仕立て 握り各種', price: '時価', desc: '旬の天然魚を伝統の江戸前技法で一貫一貫丁寧に握ります。' },
+        { name: '極みのえんロール', price: '¥3,800', desc: '馬糞雲丹、自家製いくら、厳選本マグロを贅沢に巻き上げた名物逸品巻き。' },
+        { name: 'ズワイ蟹と雲丹とキャビア', price: '¥4,500', desc: '甘み豊かなズワイ蟹に濃厚な雲丹とキャビアを添えた特別小鉢。' },
+        { name: '吉次のしゃぶしゃぶ', price: '¥5,200', desc: '北海道産・高級魚吉次（キンキ）の豊かな脂を贅沢に出汁しゃぶで。' }
+      ],
+      drink: [
+        { name: '日高見（ひたかみ）純米大吟醸 瓢箪', price: '時価', desc: '宮城・石巻の平孝酒造が誇る鮨専用酒。美しい瓢箪ボトルと極上の切れ味。' },
+        { name: 'DATE SEVEN（デートセブン）', price: '時価', desc: '宮城県の蔵元7社が合同で醸す、年に一度の限定プレミアム日本酒。' },
+        { name: '而今（じこん）純米大吟醸', price: '¥2,200 〜', desc: '入手困難とされる銘酒。果実のような華やかな香りと澄んだ透明感。' },
+        { name: '磯自慢 / 作（ざく）智', price: '¥1,800 〜', desc: 'ミシュラン掲載店で愛される最高峰。鮨の脂と酢飯の酸味に完璧に寄り添う一献。' }
+      ]
+    };
+
+    function enterLobbyFromStart() {
+      document.getElementById('start-page').classList.add('is-hidden');
+      document.getElementById('lobby-screen').classList.remove('is-closed');
+    }
+
+    function goToStartPage() {
+      document.getElementById('start-page').classList.remove('is-hidden');
+      document.getElementById('lobby-screen').classList.add('is-closed');
+    }
+
+    function openLobby() {
+      document.getElementById('lobby-screen').classList.remove('is-closed');
+    }
+
+    function closeLobby() {
+      document.getElementById('lobby-screen').classList.add('is-closed');
+    }
+
+    function navigateToSection(sectionId) {
+      previousSectionId = sectionId;
+      const allSections = document.querySelectorAll('.section-block');
+      
+      allSections.forEach(sec => {
+        sec.classList.remove('is-active');
+        sec.scrollTop = 0;
+      });
+
+      const targetElement = document.getElementById(sectionId);
+      if (targetElement) {
+        targetElement.classList.add('is-active');
+        initIntersectionObserver(targetElement);
+
+        if (sectionId === 'menu') {
+          renderSingleMenu('food');
+        }
+      }
+
+      document.getElementById('lobby-screen').classList.add('is-closed');
+    }
+
+    function switchCategory(evt, cat) {
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach(btn => btn.classList.remove('active'));
+      if (evt && evt.target) {
+        evt.target.classList.add('active');
+      }
+      renderSingleMenu(cat);
+    }
+
+    function renderSingleMenu(cat) {
+      const listContainer = document.getElementById('singleMenuList');
+      if (!listContainer) return;
+
+      const items = singleMenuData[cat] || [];
+      listContainer.innerHTML = items.map(item => `
+        <div class="course-item">
+          <div class="course-main-row">
+            <h3 class="course-name">${item.name}</h3>
+            <div class="course-price">${item.price}</div>
+          </div>
+          <div class="course-desc-box">
+            ${item.desc}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function initIntersectionObserver(container) {
+      const reveals = container.querySelectorAll('.reveal');
+      reveals.forEach(el => el.classList.remove('is-visible'));
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, {
+        root: container,
+        threshold: 0.05
+      });
+
+      reveals.forEach(el => observer.observe(el));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      renderSingleMenu('food');
+      const activeSection = document.querySelector('.section-block.is-active');
+      if (activeSection) {
+        initIntersectionObserver(activeSection);
+      }
+    });
+
+    flatpickr("#customDatePicker", {
+      locale: "ja",
+      dateFormat: "Y/m/d",
+      minDate: "today",
+      disableMobile: "true"
+    });
+  </script>
+
+</body>
+</html>
