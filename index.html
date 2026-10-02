@@ -1307,6 +1307,12 @@
    /* [한국어] 반응형 모바일 미디어 쿼리 (가로 쓰기 전환 및 모바일 최적화) */
     /* [日本語] レスポンシブ モバイル メディアクエリ (横書き変換＆モバイル最適化) */
     @media (max-width: 768px) {
+
+      /* 1. 전체 화면 가로 스크롤(좌우 흔들림) 완전 차단 */
+      html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+      }
       
       /* 1. 모바일 햄버거 버튼 가시성 확보 */
       /* .header-hamburger {
@@ -1318,8 +1324,7 @@
       } */
 
       /* 2. 想い/技 글귀 컨테이너 가로 쓰기(Horizontal) 전환 */
-      .omoi-poem-wrapper,
-      .waza-poem-wrapper {
+      .omoi-poem-wrapper {
         writing-mode: horizontal-tb !important;
         -webkit-writing-mode: horizontal-tb !important;
         height: auto !important;
@@ -1333,15 +1338,38 @@
         gap: 12px !important;
       }
 
+      .waza-poem-wrapper {
+        writing-mode: horizontal-tb !important;
+        -webkit-writing-mode: horizontal-tb !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 90vw !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+      }
+
       /* 3. 글귀 각 문장별 스타일 최적화 */
-      .omoi-poem-wrapper .v-line,
-      .waza-poem-wrapper .v-line {
+      .omoi-poem-wrapper .v-line {
         display: block !important;
         font-size: 14px !important;
         letter-spacing: 2px !important;
         line-height: 1.8 !important;
         margin-left: 0 !important;
         color: rgba(255, 255, 255, 0.9) !important;
+      }
+      .waza-poem-wrapper .v-line {
+        display: block !important;
+        font-size: 14px !important;
+        letter-spacing: 1.5px !important;
+        line-height: 1.8 !important;
+        margin-left: 0 !important;
+        white-space: normal !important; /* 모바일에서 긴 문장 자동 줄바꿈 허용 */
+        word-break: keep-all !important; /* 단어 단위로 예쁘게 줄바꿈 */
+        color: rgba(255, 255, 255, 0.95) !important;
       }
 
       .omoi-poem-wrapper .v-line.main-title {
@@ -1358,11 +1386,21 @@
         color: #e5d099 !important;
       }
 
-      .omoi-poem-wrapper .v-line.space-left,
-      .waza-poem-wrapper .v-line.space-left {
+      .omoi-poem-wrapper .v-line.space-left {
         margin-top: 14px !important;
         margin-left: 0 !important;
       }
+      .waza-poem-wrapper .v-line.space-left {
+        margin-top: 12px !important;
+        margin-left: 0 !important;
+      }
+
+      .scroll-indicator,
+      .scroll-down,
+      .hero-scroll {
+        bottom: 20px !important; /* 기존 위치보다 아래로 내려 배치 (필요 시 15px로 조절 가능) */
+      }
+    
 
       /* 4. 기존 레이아웃 모바일 반응형 유지 */
       .course-main-row { flex-direction: column; gap: 8px; }
@@ -1379,6 +1417,7 @@
       .click-option-grid-7 { grid-template-columns: repeat(4, 1fr); }
       .flatpickr-calendar { width: 320px !important; }
     }
+    
   </style>
 </head>
 <body>
