@@ -1279,51 +1279,47 @@
       }
     }
 
-    /* ==========================================================================
-       [최종 해결] 모바일 반응형 미디어 쿼리 (가로 스크롤 & 텍스트 튀어나감 완전 제거)
-       ========================================================================== */
-    @media (max-width: 768px) {
+   /* ==========================================
+       [최종 원인 해결] 모바일 가로 스크롤 & 텍스트 넘침 100% 차단
+       ========================================== */
+    @media screen and (max-width: 768px) {
 
-      /* 1. 전체 화면 가로 스크롤(좌우 덜컹거림) 물리적 차단 */
+      /* 1. 100vw로 인한 화면 넘침 물리적 차단 (핵심) */
       html, body {
-        overflow-x: hidden !important;
         width: 100% !important;
-        max-width: 100vw !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        position: relative !important;
       }
 
-      /* 2. 모든 섹션 및 메인 감싸는 컨테이너 모바일 규격 보정 */
+      /* 2. 모든 독립 섹션 프레임의 좌우 넘침 차단 */
       .section-block,
+      main,
+      section,
+      div {
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 3. Waza/Omoi 컨테이너 가로쓰기 & 여백 강제 리셋 */
       .omoi-main-wrapper,
       .waza-main-wrapper,
       .menu-main-wrapper,
       .info-main-wrapper,
-      .reserve-main-wrapper,
-      #waza, #omoi, #menu, #info, #reserve {
+      .reserve-main-wrapper {
         width: 100% !important;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-        box-sizing: border-box !important;
         padding-left: 15px !important;
         padding-right: 15px !important;
-      }
-
-      /* 3. Omoi & Waza 글귀 컨테이너 가로 쓰기 전환 */
-      .omoi-poem-wrapper,
-      .waza-poem-wrapper,
-      .omoi-poem-wrapper *,
-      .waza-poem-wrapper * {
-        writing-mode: horizontal-tb !important;
-        -webkit-writing-mode: horizontal-tb !important;
-        direction: ltr !important;
-        white-space: normal !important; /* 자동 줄바꿈으로 튀어나감 방지 */
-        word-break: keep-all !important; /* 단어 단위 정갈한 줄바꿈 */
+        overflow-x: hidden !important;
       }
 
       .omoi-poem-wrapper,
       .waza-poem-wrapper {
+        writing-mode: horizontal-tb !important;
+        -webkit-writing-mode: horizontal-tb !important;
+        direction: ltr !important;
         height: auto !important;
         min-height: 0 !important;
-        max-height: none !important;
         width: 100% !important;
         max-width: 100% !important;
         display: flex !important;
@@ -1336,85 +1332,48 @@
         padding: 0 !important;
       }
 
-      /* 4. 문장 요소를 모바일 가로글로 강제 변환 (글자 튀어나감 차단) */
+      /* 4. last-line, space-left 등 PC용 여백 싹 날리고 화면 안으로 강제 줄바꿈 */
       .omoi-poem-wrapper .v-line,
       .waza-poem-wrapper .v-line,
       .v-line {
+        writing-mode: horizontal-tb !important;
+        -webkit-writing-mode: horizontal-tb !important;
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
         font-size: 14px !important;
-        letter-spacing: 1.5px !important;
+        letter-spacing: 1px !important;
         line-height: 1.8 !important;
         margin: 0 !important;
+        padding: 0 !important;
+        white-space: normal !important;
+        word-break: break-all !important; /* 글자가 화면 가장자리에 닿면 무조건 강제 줄바꿈 */
         color: rgba(255, 255, 255, 0.95) !important;
       }
 
       .omoi-poem-wrapper .v-line.main-title {
         font-size: 20px !important;
-        letter-spacing: 4px !important;
-        margin-bottom: 6px !important;
-        color: #ffffff !important;
+        letter-spacing: 3px !important;
       }
 
-      .omoi-poem-wrapper .v-line.sub-location {
-        font-size: 13px !important;
-        margin-bottom: 12px !important;
-        color: #e5d099 !important;
+      /* 5. 기타 섹션 모바일 폭 고정 (320px 그리드 깨기) */
+      .info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
       }
-
-      .omoi-poem-wrapper .v-line.space-left,
-      .waza-poem-wrapper .v-line.space-left {
-        margin-top: 10px !important;
+      .info-row {
+        grid-template-columns: 80px 1fr !important;
       }
-
-      /* 5. 스크롤 안내 가이드 위치 하단 이동 */
+      .click-option-grid-7 {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+      .flatpickr-calendar {
+        width: 300px !important;
+      }
       .scroll-guide {
-        bottom: 50px !important;
+        bottom: 40px !important;
       }
-
-      /* 6. 기존 레이아웃 모바일 반응형 유지 */
-      .course-main-row { flex-direction: column; gap: 8px; }
-      .course-name { font-size: 18px; }
-      .course-price { font-size: 17px; }
-      .tab-header { gap: 25px; }
-      .tab-btn { font-size: 15px; letter-spacing: 3px; }
-
-      .info-grid { grid-template-columns: 1fr; gap: 50px; }
-      .info-row { grid-template-columns: 90px 1fr; }
-      .building-card { min-height: 200px; }
-      .nobreak-line { white-space: normal; }
-
-      .click-option-grid-7 { grid-template-columns: repeat(4, 1fr); }
-      .flatpickr-calendar { width: 320px !important; }
     }
-
-    /* [퇴근 치트키] Waza 모바일 글자 튀어나감 & 좌우 스크롤 100% 방지 */
-@media screen and (max-width: 768px) {
-  
-  /* 1. Waza 섹션 글자 박스 너비 고정 */
-  .waza-poem-wrapper {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 15px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* 2. last-line, space-left 등 모든 PC용 여백을 모바일에서 강제 초기화 */
-  .waza-poem-wrapper .v-line,
-  .waza-poem-wrapper .v-line.last-line,
-  .waza-poem-wrapper .v-line.space-left {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    white-space: normal !important;
-    word-break: break-all !important; /* 화면 폭 넘어가면 무조건 다음 줄로 강제 줄바꿈 */
-  }
-}
   </style>
 </head>
 <body>
