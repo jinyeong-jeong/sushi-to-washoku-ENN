@@ -1308,18 +1308,20 @@
     /* [日本語] レスポンシブ モバイル メディアクエリ (横書き変換＆モバイル最適化) */
     @media (max-width: 768px) {
 
-      /* 1. 전체 화면 가로 스크롤(좌우 흔들림) 완전 차단 */
+      /* 1. 전체 화면 가로 스크롤(좌우 덜컹거림) 차단 & 세로 스크롤 허용 */
       html, body {
         overflow-x: hidden !important;
+        overflow-y: auto !important;
         width: 100% !important;
         position: relative !important;
       }
       
-      /* 2. Waza 메인 감싸는 영역 세로 크기 해제 및 넘침 차단 */
+      /* 2. Waza 메인 영역 터치 스크롤 정상화 (overflow: hidden 제거) */
       .waza-main-wrapper,
       #waza,
       section[id*="waza"] {
-        overflow: hidden !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
         width: 100% !important;
         max-width: 100vw !important;
         padding-left: 20px !important;
@@ -1327,94 +1329,16 @@
         box-sizing: border-box !important;
       }
 
-      /* 3. Omoi & Waza 내부의 모든 그룹div 및 세로쓰기 속성 일괄 해제 (핵심 해결책) */
+      /* 3. Omoi & Waza 세로쓰기 속성 일괄 해제 */
       .omoi-poem-wrapper,
       .waza-poem-wrapper,
       .omoi-poem-wrapper *,
       .waza-poem-wrapper * {
         writing-mode: horizontal-tb !important;
         -webkit-writing-mode: horizontal-tb !important;
-        white-space: normal !important; /* 줄바꿈 허용 */
-        word-break: keep-all !important; /* 단어 단위 정갈한 줄바꿈 */
+        white-space: normal !important;
+        word-break: keep-all !important;
       }
-
-      /* 4. Omoi & Waza 내부 부모 그룹div(poem-header-group 등) 모바일 정렬 해제 */
-      .omoi-poem-wrapper div,
-      .waza-poem-wrapper div {
-        display: block !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-
-      /* 5. 컨테이너 가로 쓰기 flex 배치 */
-      .omoi-poem-wrapper,
-      .waza-poem-wrapper {
-        height: auto !important;
-        max-height: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        gap: 12px !important;
-        margin: 0 auto !important;
-      }
-
-      /* 6. 문장 요소(.v-line) 모바일 가로글 변환 */
-      .omoi-poem-wrapper .v-line,
-      .waza-poem-wrapper .v-line {
-        display: block !important;
-        font-size: 14px !important;
-        letter-spacing: 1.5px !important;
-        line-height: 1.8 !important;
-        margin: 0 !important;
-        color: rgba(255, 255, 255, 0.95) !important;
-      }
-
-      .omoi-poem-wrapper .v-line.main-title {
-        font-size: 20px !important;
-        letter-spacing: 4px !important;
-        margin-bottom: 8px !important;
-        color: #ffffff !important;
-      }
-
-      .omoi-poem-wrapper .v-line.sub-location {
-        font-size: 13px !important;
-        margin-top: 0 !important;
-        margin-bottom: 16px !important;
-        color: #e5d099 !important;
-      }
-
-      .omoi-poem-wrapper .v-line.space-left,
-      .waza-poem-wrapper .v-line.space-left {
-        margin-top: 12px !important;
-        margin-left: 0 !important;
-      }
-
-      /* 7. SCROLL 안내 위치 하단 이동 */
-      .scroll-indicator,
-      .scroll-down,
-      .hero-scroll {
-        bottom: 20px !important;
-      }
-
-      /* 8. 기존 레이아웃 모바일 반응형 유지 */
-      .course-main-row { flex-direction: column; gap: 8px; }
-      .course-name { font-size: 18px; }
-      .course-price { font-size: 17px; }
-      .tab-header { gap: 25px; }
-      .tab-btn { font-size: 15px; letter-spacing: 3px; }
-
-      .info-grid { grid-template-columns: 1fr; gap: 50px; }
-      .info-row { grid-template-columns: 90px 1fr; }
-      .building-card { min-height: 200px; }
-      .nobreak-line { white-space: normal; }
-
-      .click-option-grid-7 { grid-template-columns: repeat(4, 1fr); }
-      .flatpickr-calendar { width: 320px !important; }
     }
     
   </style>
