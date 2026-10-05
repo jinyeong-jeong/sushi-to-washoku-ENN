@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
 body, html {
   width: 100%;
   height: 100%;
@@ -1454,4 +1459,108 @@ body, html {
   .scroll-guide {
     bottom: 40px !important;
   }
+
+  html[lang="en"] .footer-nav-vertical {
+    gap: 16px 24px !important; /* 모바일에서 항목 간격 축소 */
+  }
+
+  html[lang="en"] .footer-nav-item {
+    font-size: 13px !important;
+    letter-spacing: 1px !important;
+  }
+}
+
+
+
+
+/* ==========================================
+   영어 페이지 (index-en.html) 가로 쓰기 전환
+   ========================================== */
+html[lang="en"] .omoi-poem-wrapper,
+html[lang="en"] .waza-poem-wrapper,
+html[lang="en"] .hero-title-vertical,
+html[lang="en"] .scroll-text,
+html[lang="en"] .start-title-vertical,
+html[lang="en"] .lobby-menu-item,
+html[lang="en"] .footer-nav-item {
+  writing-mode: horizontal-tb !important;
+  -webkit-writing-mode: horizontal-tb !important;
+  direction: ltr !important;
+}
+
+/* 영어 시(詩) / 문구 영역 레이아웃 조정 */
+html[lang="en"] .omoi-poem-wrapper,
+html[lang="en"] .waza-poem-wrapper {
+  height: auto !important;
+  max-height: none !important;
+  width: 100% !important;
+  max-width: 800px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 16px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+}
+
+html[lang="en"] .omoi-poem-wrapper .v-line,
+html[lang="en"] .waza-poem-wrapper .v-line {
+  display: block !important;
+  width: 100% !important;
+  font-size: 16px !important;
+  letter-spacing: 2px !important;
+  line-height: 1.8 !important;
+  margin: 0 !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+}
+
+html[lang="en"] .omoi-poem-wrapper .v-line.main-title {
+  font-size: 24px !important;
+  letter-spacing: 3px !important;
+  margin-bottom: 10px !important;
+}
+
+html[lang="en"] .omoi-poem-wrapper .v-line.sub-location {
+  margin-top: 0 !important;
+  margin-bottom: 25px !important;
+  font-size: 14px !important;
+}
+
+/* 로비 메뉴 및 하단 푸터 네비게이션 가로 정렬 */
+html[lang="en"] .lobby-menu-nav {
+  flex-direction: column !important;
+  height: auto !important;
+  gap: 25px !important;
+}
+
+html[lang="en"] .footer-nav-vertical {
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 30px !important;
+}
+
+/* ==========================================
+   영어 페이지 (index-en.html) 푸터 정밀 보정
+   ========================================== */
+html[lang="en"] .footer-nav-vertical {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 32px !important;            /* 메뉴 항목 간격 */
+  margin-bottom: 50px !important;
+}
+
+html[lang="en"] .footer-nav-item {
+  writing-mode: horizontal-tb !important;
+  -webkit-writing-mode: horizontal-tb !important;
+  font-size: 14px !important;      /* 적절한 폰트 크기 */
+  letter-spacing: 1.5px !important;  /* 자간을 자자연스럽고 좁게 보정 */
+  color: #222222 !important;
+  font-weight: 400 !important;
 }

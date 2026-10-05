@@ -1,25 +1,24 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>鮨と和食 人結</title>
+  <title>Sushi & Washoku Hitomusubi</title>
 
-  <!-- 外部ライブラリ / 外部ライブラリ -->
+  <!-- External Libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
 
-  <!-- 분리된 Style CSS 연결 -->
+  <!-- Shared CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- 上端固定ヘッダー -->
+  <!-- Fixed Header -->
   <header class="page-header">
     <div class="header-logo" onclick="goToStartPage()" title="Start Page">
-      <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+      <img src="./SVG/washokuLogo.svg" alt="Sushi & Washoku Hitomusubi Logo">
     </div>
     <div class="header-hamburger" onclick="openLobby()" title="Open Menu">
       <span></span>
@@ -27,7 +26,7 @@
     </div>
   </header>
 
-  <!-- 1. スプ ラッシュ オープニング ページ -->
+  <!-- 1. Splash Opening Page -->
   <div id="start-page" onclick="enterLobbyFromStart()">
     <svg class="thread-svg-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none">
       <path class="red-thread-path" d="M -100,300 C 200,80 350,520 500,300 C 650,80 800,520 1100,300" />
@@ -35,32 +34,32 @@
     </svg>
 
     <div class="start-logo-box" onclick="event.stopPropagation(); goToStartPage();">
-      <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+      <img src="./SVG/washokuLogo.svg" alt="Sushi & Washoku Hitomusubi Logo">
     </div>
     <div class="start-title-vertical">鮨と和食 人結</div>
     <div class="start-click-hint">CLICK TO ENTER</div>
   </div>
 
-  <!-- 2. スライド メニュー ロビー 画面 -->
+  <!-- 2. Slide Menu Lobby Screen -->
   <div id="lobby-screen">
     <header class="lobby-header">
       <div class="lobby-logo-box" onclick="goToStartPage()" title="Start Page">
-        <img src="./SVG/washokuLogo.svg" alt="鮨と和食 人結 ロゴ">
+        <img src="./SVG/washokuLogo.svg" alt="Sushi & Washoku Hitomusubi Logo">
       </div>
       <div class="lobby-top-right">
         <div class="lang-select">
-          <a href="index-en.html">EN</a> / <span>JA</span>
+          <span>EN</span> / <a href="index.html">JA</a>
         </div>
         <button class="close-btn" onclick="closeLobby()" title="Close">✕</button>
       </div>
     </header>
 
     <nav class="lobby-menu-nav">
-      <a onclick="navigateToSection('omoi')" class="lobby-menu-item">想い</a>
-      <a onclick="navigateToSection('waza')" class="lobby-menu-item">技</a>
-      <a onclick="navigateToSection('menu')" class="lobby-menu-item">お品書き</a>
-      <a onclick="navigateToSection('info')" class="lobby-menu-item">店舗案内</a>
-      <a onclick="navigateToSection('reserve')" class="lobby-menu-item">ご予約</a>
+      <a onclick="navigateToSection('omoi')" class="lobby-menu-item">Philosophy</a>
+      <a onclick="navigateToSection('waza')" class="lobby-menu-item">Craftsmanship</a>
+      <a onclick="navigateToSection('menu')" class="lobby-menu-item">Menu</a>
+      <a onclick="navigateToSection('info')" class="lobby-menu-item">Info</a>
+      <a onclick="navigateToSection('reserve')" class="lobby-menu-item">Reservation</a>
     </nav>
 
     <footer class="lobby-footer">
@@ -74,43 +73,42 @@
     </footer>
   </div>
 
-  <!-- 3. メイン コンテンツ コンテナ -->
+  <!-- 3. Main Content Container -->
   <main>
 
-    <!-- [HTML 1] 想い (Omoi) Section -->
+    <!-- [HTML 1] Philosophy (Omoi) Section -->
     <section id="omoi" class="section-block is-active">
       <div class="hero-section">
-        <h1 class="hero-title-vertical reveal">想い</h1>
+        <h1 class="hero-title-vertical reveal">Philosophy</h1>
         <div class="scroll-guide reveal delay-1">
-          <span class="scroll-text">スクロール</span>
+          <span class="scroll-text">SCROLL</span>
           <div class="scroll-line"></div>
         </div>
       </div>
 
       <div class="omoi-main-wrapper">
         <div class="omoi-poem-wrapper reveal delay-1">
-          <div class="v-line main-title">「一期一会を、結ぶ」</div>
-          <div class="v-line sub-location">仙台・国分町</div>
-          <div class="v-line">静寂が満ちる凛とした空間。</div>
-          <div class="v-line">私どもがお届けするのは</div>
-          <div class="v-line">単なる食事ではなく</div>
-          <div class="v-line">時を忘れるひとときです。</div>
-          <div class="v-line space-left">東北の豊かな恵みと</div>
-          <div class="v-line">江戸前の粋を宿した一貫。</div>
-          <div class="v-line space-left">一日四組のお客様のためだけに</div>
-          <div class="v-line">研ぎ澄ました技と心を尽くします。</div>
-          <div class="v-line space-left">人と人、人と旨味が結ばれる</div>
-          <div class="v-line">特別な宴をお楽しみください。</div>
+          <div class="v-line main-title">"Connecting Once-in-a-Lifetime Encounters"</div>
+          <div class="v-line sub-location">Sendai · Kokubuncho</div>
+          <div class="v-line">A refined space filled with tranquil elegance.</div>
+          <div class="v-line">What we offer is not merely a meal,</div>
+          <div class="v-line">but a timeless moment to cherish.</div>
+          <div class="v-line space-left">Harnessing the rich blessings of Tohoku</div>
+          <div class="v-line">and the refined spirit of Edomae craftsmanship.</div>
+          <div class="v-line space-left">Exclusively crafted for just four parties a day,</div>
+          <div class="v-line">we devote our heart and honed techniques to every piece.</div>
+          <div class="v-line space-left">May you enjoy a memorable banquet</div>
+          <div class="v-line">where people and exquisite flavors bind as one.</div>
         </div>
       </div>
 
       <footer class="site-footer">
         <nav class="footer-nav-vertical reveal">
-          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
-          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
-          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
-          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
-          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">Reservation</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">Info</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">Menu</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">Craftsmanship</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">Philosophy</a>
         </nav>
 
         <div class="footer-bottom reveal">
@@ -126,34 +124,34 @@
       </footer>
     </section>
 
-    <!-- [HTML 2] 技 (Waza) Section -->
+    <!-- [HTML 2] Craftsmanship (Waza) Section -->
     <section id="waza" class="section-block">
       <div class="hero-section">
-        <h1 class="hero-title-vertical reveal">技</h1>
+        <h1 class="hero-title-vertical reveal">Craftsmanship</h1>
         <div class="scroll-guide reveal delay-1">
-          <span class="scroll-text">スクロール</span>
+          <span class="scroll-text">SCROLL</span>
           <div class="scroll-line"></div>
         </div>
       </div>
 
       <div class="waza-main-wrapper">
         <div class="waza-poem-wrapper reveal delay-1">
-          <div class="v-line">伝統的な江戸前仕立て。</div>
-          <div class="v-line">全国各地の独自のルートより</div>
-          <div class="v-line">「人結」のためだけに選び抜かれた鮮魚。</div>
-          <div class="v-line">素材の旨味を極限まで引き出す丁寧な仕込みと</div>
-          <div class="v-line">赤酢の酸味とコクを効かせた地元・ササニシキのしゃり。</div>
-          <div class="v-line space-left last-line">一貫に宿る職人の技と美学をお楽しみください。</div>
+          <div class="v-line">Traditional Edomae preparation.</div>
+          <div class="v-line">Sourced via exclusive channels nationwide,</div>
+          <div class="v-line">fresh fish carefully selected solely for "Hitomusubi".</div>
+          <div class="v-line">Meticulous prep work bringing out peak umami flavors,</div>
+          <div class="v-line">paired with local Sasanishiki rice seasoned with rich red vinegar.</div>
+          <div class="v-line space-left last-line">Savor the artisan's technique and aesthetics in every single piece.</div>
         </div>
       </div>
 
       <footer class="site-footer">
         <nav class="footer-nav-vertical reveal">
-          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
-          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
-          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
-          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
-          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">Reservation</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">Info</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">Menu</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">Craftsmanship</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">Philosophy</a>
         </nav>
 
         <div class="footer-bottom reveal">
@@ -169,12 +167,12 @@
       </footer>
     </section>
 
-    <!-- [HTML 3] お品書き (Menu) Section -->
+    <!-- [HTML 3] Menu Section -->
     <section id="menu" class="section-block">
       <div class="hero-section">
-        <h1 class="hero-title-vertical reveal">お品書き</h1>
+        <h1 class="hero-title-vertical reveal">Menu</h1>
         <div class="scroll-guide reveal delay-1">
-          <span class="scroll-text">スクロール</span>
+          <span class="scroll-text">SCROLL</span>
           <div class="scroll-line"></div>
         </div>
       </div>
@@ -183,56 +181,56 @@
         <div class="menu-container">
           
           <div class="menu-section-header reveal">
-            <div class="menu-section-sub-title">おまかせ</div>
-            <h2 class="menu-section-main-title">厳選した旬の味覚を愉しむ</h2>
+            <div class="menu-section-sub-title">Omakase Course</div>
+            <h2 class="menu-section-main-title">Savor Seasonal Delicacies</h2>
           </div>
 
           <div class="course-list">
             <div class="course-item reveal delay-1">
               <div class="course-main-row">
-                <h3 class="course-name">極み鮨コース</h3>
+                <h3 class="course-name">Kiwami Sushi Course</h3>
                 <div class="course-price">¥11,000</div>
               </div>
               <div class="course-desc-box">
-                先付・前菜・逸品・江戸前仕立て鮨十貫・甘味
+                Appetizer · Assorted Dish · Special Delicacy · 10 Pieces of Edomae Sushi · Dessert
               </div>
             </div>
 
             <div class="course-item reveal delay-2">
               <div class="course-main-row">
-                <h3 class="course-name">SPECIAL お任せコース</h3>
+                <h3 class="course-name">SPECIAL Omakase Course</h3>
                 <div class="course-price">¥22,000</div>
               </div>
               <div class="course-desc-box">
-                先付・お造り・メイン（ズワイ蟹/仙台牛）・極み鮨十貫・甘味
+                Appetizer · Sashimi · Main Dish (Snow Crab / Sendai Beef) · 10 Premium Sushi Pieces · Dessert
               </div>
             </div>
 
             <div class="course-item reveal delay-3">
               <div class="course-main-row">
-                <h3 class="course-name">大切なお客さまのためのコース</h3>
+                <h3 class="course-name">VIP Guests Special Course</h3>
                 <div class="course-price">¥28,500</div>
               </div>
               <div class="course-desc-box">
-                先付・前菜・温物・極上鮨八貫・甘味（一日四組限定）
+                Appetizer · Seasonal Starters · Warm Dish · 8 Ultimate Sushi Pieces · Dessert (Limited to 4 parties/day)
               </div>
             </div>
           </div>
 
           <div class="course-notice-box reveal">
-            ※ 表示価格は全て税込価格でございます。<br>
-            ※ 季節や仕入れ状況により、お料理・お酒の内容が日々異なります。
+            * All prices include tax.<br>
+            * Dishes and sake selections vary daily based on seasonal availability.
           </div>
 
           <div class="single-menu-section reveal">
             <div class="menu-section-header">
-              <div class="menu-section-sub-title">一品 と 銘酒</div>
-              <h2 class="menu-section-main-title">一品と厳選の銘酒</h2>
+              <div class="menu-section-sub-title">Single Dishes & Sake</div>
+              <h2 class="menu-section-main-title">Single Dishes & Japanese Sake</h2>
             </div>
 
             <div class="tab-header">
-              <button class="tab-btn active" onclick="switchCategory(event, 'food')">お料理（一品）</button>
-              <button class="tab-btn" onclick="switchCategory(event, 'drink')">お飲み物（銘酒）</button>
+              <button class="tab-btn active" onclick="switchCategory(event, 'food')">Single Dishes</button>
+              <button class="tab-btn" onclick="switchCategory(event, 'drink')">Japanese Sake</button>
             </div>
 
             <div class="single-menu-list" id="singleMenuList">
@@ -240,7 +238,7 @@
             </div>
 
             <div class="single-notice-box">
-              ※ このほかにも、季節の限定お料理や厳選したお酒を多数ご用意しております。
+              * In addition to these, we offer various seasonal limited dishes and curated sakes.
             </div>
           </div>
 
@@ -249,11 +247,11 @@
 
       <footer class="site-footer">
         <nav class="footer-nav-vertical reveal">
-          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
-          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
-          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
-          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
-          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">Reservation</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">Info</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">Menu</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">Craftsmanship</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">Philosophy</a>
         </nav>
 
         <div class="footer-bottom reveal">
@@ -269,12 +267,12 @@
       </footer>
     </section>
 
-    <!-- [HTML 4] 店舗案内 (Info) Section -->
+    <!-- [HTML 4] Information Section -->
     <section id="info" class="section-block">
       <div class="hero-section">
-        <h1 class="hero-title-vertical reveal">店舗案内</h1>
+        <h1 class="hero-title-vertical reveal">Info</h1>
         <div class="scroll-guide reveal delay-1">
-          <span class="scroll-text">スクロール</span>
+          <span class="scroll-text">SCROLL</span>
           <div class="scroll-line"></div>
         </div>
       </div>
@@ -283,23 +281,23 @@
         <div class="info-container">
           
           <div class="info-section-header reveal">
-            <div class="info-section-sub-title">店舗案内</div>
-            <h2 class="info-section-main-title">店舗情報</h2>
+            <div class="info-section-sub-title">Restaurant Info</div>
+            <h2 class="info-section-main-title">Access & Details</h2>
           </div>
 
           <div class="info-grid reveal delay-1">
             
             <div class="info-left-panel">
               <div class="tel-card">
-                <div class="tel-sub">お電話での御予約・お問い合わせ</div>
+                <div class="tel-sub">Phone Reservations & Inquiries</div>
                 <a href="tel:0222658388" class="tel-number">022-265-8388</a>
-                <div class="tel-hours">営業時間 17:30 〜 23:00</div>
+                <div class="tel-hours">Hours: 17:30 – 23:00</div>
               </div>
 
               <div class="building-card">
                 <div class="building-card-content">
-                  当店は<br>
-                  <span class="nobreak-line"><strong>「DK一番町ビル 1F」</strong> です</span>
+                  Located at<br>
+                  <span class="nobreak-line"><strong>"DK Ichibancho Bldg. 1F"</strong></span>
                 </div>
               </div>
             </div>
@@ -307,60 +305,60 @@
             <div class="info-table">
               
               <div class="info-row">
-                <div class="info-label">店内</div>
-                <div class="info-value">鮨と和食 人結（えん）</div>
+                <div class="info-label">Name</div>
+                <div class="info-value">Sushi & Washoku Hitomusubi (ENN)</div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">住所</div>
+                <div class="info-label">Address</div>
                 <div class="info-value">
                   〒980-0811<br>
-                  宮城県仙台市青葉区一番町2-7-9 DK一番町ビル 1F
+                  1F DK Ichibancho Bldg., 2-7-9 Ichibancho, Aoba-ku, Sendai, Miyagi
                 </div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">アクセス</div>
+                <div class="info-label">Access</div>
                 <div class="info-value">
-                  仙台市営地下鉄東西線「青葉通一番町駅」南1口より徒歩3分<br>
-                  JR仙石線「あおば通駅」徒歩9分
+                  3-min walk from "Aobadori-Ichibancho Station" Exit South 1 (Tozai Line)<br>
+                  9-min walk from JR Senseki Line "Aoba-dori Station"
                 </div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">営業時間</div>
-                <div class="info-value">17:30 〜 23:00</div>
+                <div class="info-label">Hours</div>
+                <div class="info-value">17:30 – 23:00</div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">定休日</div>
-                <div class="info-value">月曜日</div>
+                <div class="info-label">Closed</div>
+                <div class="info-value">Mondays</div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">駐車場</div>
+                <div class="info-label">Parking</div>
                 <div class="info-value">
-                  無し
-                  <div class="info-note">※近隣にコインパーキングがございます。</div>
+                  None
+                  <div class="info-note">*Coin parking lots available nearby.</div>
                 </div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">貸切</div>
+                <div class="info-label">Private</div>
                 <div class="info-value">
-                  可
-                  <div class="info-note">※詳しくは店舗へご相談ください / 1日4組限定</div>
+                  Available
+                  <div class="info-note">*Please consult with store / Limited to 4 parties per day</div>
                 </div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">カード</div>
-                <div class="info-value">可（VISA, Master, JCB, AMEX）</div>
+                <div class="info-label">Card</div>
+                <div class="info-value">Accepted (VISA, Master, JCB, AMEX)</div>
               </div>
 
               <div class="info-row">
-                <div class="info-label">QR決済</div>
-                <div class="info-value">不可</div>
+                <div class="info-label">QR Pay</div>
+                <div class="info-value">Not Accepted</div>
               </div>
 
             </div>
@@ -372,11 +370,11 @@
 
       <footer class="site-footer">
         <nav class="footer-nav-vertical reveal">
-          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
-          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
-          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
-          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
-          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">Reservation</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">Info</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">Menu</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">Craftsmanship</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">Philosophy</a>
         </nav>
 
         <div class="footer-bottom reveal">
@@ -392,12 +390,12 @@
       </footer>
     </section>
 
-    <!-- [HTML 5] ご予約・お問い合わせ (Reserve) Section -->
+    <!-- [HTML 5] Reservation Section -->
     <section id="reserve" class="section-block">
       <div class="hero-section">
-        <h1 class="hero-title-vertical reveal">ご予約</h1>
+        <h1 class="hero-title-vertical reveal">Reservation</h1>
         <div class="scroll-guide reveal delay-1">
-          <span class="scroll-text">スクロール</span>
+          <span class="scroll-text">SCROLL</span>
           <div class="scroll-line"></div>
         </div>
       </div>
@@ -406,115 +404,115 @@
         <div class="reserve-container">
           
           <div class="reserve-section-header reveal">
-            <div class="reserve-section-sub-title">ご予約</div>
-            <h2 class="reserve-section-main-title">ご予約・お問い合わせ</h2>
+            <div class="reserve-section-sub-title">Bookings</div>
+            <h2 class="reserve-section-main-title">Reservations & Contact</h2>
           </div>
 
           <div class="external-reserve-box reveal delay-1">
-            <div class="ext-box-title">【各種予約サイトをご利用の方】</div>
+            <div class="ext-box-title">【 Partner Reservation Platforms 】</div>
             <div class="ext-box-desc">
-              ポイントのご利用・各種会員特典を希望されるお客様は、<br>
-              下記提携予約サイトよりご予約をお願いいたします。
+              If you wish to use membership points or benefits,<br>
+              please book through our affiliated booking sites below.
             </div>
             <div class="ext-btn-group">
-              <a href="https://hitosara.com/0031119365/" class="ext-btn" target="_blank">ヒトサラで予約 ➔</a>
-              <a href="https://restaurant.ikyu.com/149238" class="ext-btn" target="_blank">一休レストランで予約 ➔</a>
+              <a href="#" class="ext-btn" target="_blank">Book via Hitosara ➔</a>
+              <a href="#" class="ext-btn" target="_blank">Book via Ikyu.com ➔</a>
             </div>
           </div>
 
           <div class="divider-row reveal">
-            <span class="divider-text">または WEB直接お問い合わせ</span>
+            <span class="divider-text">OR DIRECT WEB INQUIRY</span>
           </div>
 
-          <form class="contact-form reveal delay-1" onsubmit="event.preventDefault(); alert('お問い合わせを受け付けました。');">
+          <form class="contact-form reveal delay-1" onsubmit="event.preventDefault(); alert('Thank you. Your inquiry has been received.');">
             
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">お名前</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Full Name</label>
+                <span class="required-badge">Required</span>
               </div>
-              <input type="text" class="form-input" placeholder="例）サンプル 太郎" required>
+              <input type="text" class="form-input" placeholder="e.g. John Smith" required>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">お電話番号</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Phone Number</label>
+                <span class="required-badge">Required</span>
               </div>
               <input type="tel" class="form-input" placeholder="090-xxxx-xxxx" required>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">メールアドレス</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Email Address</label>
+                <span class="required-badge">Required</span>
               </div>
               <input type="email" class="form-input" placeholder="xxxx@example.com" required>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">ご希望のコース</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Preferred Course</label>
+                <span class="required-badge">Required</span>
               </div>
               <select class="form-input form-select" required>
-                <option value="" disabled selected>コースをお選びください</option>
-                <option value="seat_only">席のみのご予約（当日お選びいただけます）</option>
-                <option value="course_11000">極み鮨コース（¥11,000）</option>
-                <option value="course_22000">SPECIAL お任せコース（¥22,000）</option>
-                <option value="course_28500">大切なお客さまのためのコース（¥28,500）</option>
+                <option value="" disabled selected>Please select a course</option>
+                <option value="seat_only">Seat Only (Choose menu on the day)</option>
+                <option value="course_11000">Kiwami Sushi Course (¥11,000)</option>
+                <option value="course_22000">SPECIAL Omakase Course (¥22,000)</option>
+                <option value="course_28500">VIP Guests Special Course (¥28,500)</option>
               </select>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">予約日</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Date</label>
+                <span class="required-badge">Required</span>
               </div>
-              <input type="text" id="customDatePicker" class="form-input date-input-large" placeholder="日付を選択してください" readonly required>
+              <input type="text" id="customDatePicker" class="form-input date-input-large" placeholder="Select a date" readonly required>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">人数</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Number of Guests</label>
+                <span class="required-badge">Required</span>
               </div>
               <div class="click-option-grid-7">
                 <div class="click-option-item">
-                  <input type="radio" id="p2" name="people_count" value="2名" checked required>
-                  <label for="p2" class="click-option-label">2名</label>
+                  <input type="radio" id="p2" name="people_count" value="2 Guests" checked required>
+                  <label for="p2" class="click-option-label">2</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p3" name="people_count" value="3名">
-                  <label for="p3" class="click-option-label">3名</label>
+                  <input type="radio" id="p3" name="people_count" value="3 Guests">
+                  <label for="p3" class="click-option-label">3</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p4" name="people_count" value="4名">
-                  <label for="p4" class="click-option-label">4名</label>
+                  <input type="radio" id="p4" name="people_count" value="4 Guests">
+                  <label for="p4" class="click-option-label">4</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p5" name="people_count" value="5名">
-                  <label for="p5" class="click-option-label">5名</label>
+                  <input type="radio" id="p5" name="people_count" value="5 Guests">
+                  <label for="p5" class="click-option-label">5</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p6" name="people_count" value="6名">
-                  <label for="p6" class="click-option-label">6名</label>
+                  <input type="radio" id="p6" name="people_count" value="6 Guests">
+                  <label for="p6" class="click-option-label">6</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p7" name="people_count" value="7名">
-                  <label for="p7" class="click-option-label">7名</label>
+                  <input type="radio" id="p7" name="people_count" value="7 Guests">
+                  <label for="p7" class="click-option-label">7</label>
                 </div>
                 <div class="click-option-item">
-                  <input type="radio" id="p8" name="people_count" value="8名">
-                  <label for="p8" class="click-option-label">8名</label>
+                  <input type="radio" id="p8" name="people_count" value="8 Guests">
+                  <label for="p8" class="click-option-label">8</label>
                 </div>
               </div>
             </div>
 
             <div class="form-group">
               <div class="form-label-row">
-                <label class="form-label">予約時間</label>
-                <span class="required-badge">必須</span>
+                <label class="form-label">Reservation Time</label>
+                <span class="required-badge">Required</span>
               </div>
               <div class="click-option-grid-7">
                 <div class="click-option-item">
@@ -548,7 +546,7 @@
               </div>
             </div>
 
-            <button type="submit" class="form-submit-btn">送信する</button>
+            <button type="submit" class="form-submit-btn">SUBMIT RESERVATION</button>
 
           </form>
 
@@ -557,17 +555,17 @@
 
       <footer class="site-footer">
         <nav class="footer-nav-vertical reveal">
-          <a onclick="navigateToSection('reserve')" class="footer-nav-item">ご予約</a>
-          <a onclick="navigateToSection('info')" class="footer-nav-item">店舗案内</a>
-          <a onclick="navigateToSection('menu')" class="footer-nav-item">お品書き</a>
-          <a onclick="navigateToSection('waza')" class="footer-nav-item">技</a>
-          <a onclick="navigateToSection('omoi')" class="footer-nav-item">想い</a>
+          <a onclick="navigateToSection('reserve')" class="footer-nav-item">Reservation</a>
+          <a onclick="navigateToSection('info')" class="footer-nav-item">Info</a>
+          <a onclick="navigateToSection('menu')" class="footer-nav-item">Menu</a>
+          <a onclick="navigateToSection('waza')" class="footer-nav-item">Craftsmanship</a>
+          <a onclick="navigateToSection('omoi')" class="footer-nav-item">Philosophy</a>
         </nav>
 
         <div class="footer-bottom reveal">
           <div class="footer-sns">
-            <a href="https://www.facebook.com/enn.sendai?rdid=VqXCv5W0ozIAccCN&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F19Ss7ysmgV%2F" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-            <a href="https://www.instagram.com/enn.sendai/?utm_source=ig_web_button_share_sheet" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
           </div>
           <div class="footer-copyright">
             © 2026 SUSHITOWASHOKU ENN. All rights reserved.
@@ -579,7 +577,7 @@
 
   </main>
 
-  <!-- 분리된 Script JavaScript 연결 -->
+  <!-- Script for English Version -->
   <script src="script.js"></script>
 
 </body>

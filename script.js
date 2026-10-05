@@ -1,13 +1,27 @@
 let previousSectionId = 'omoi';
 
+// 1. 현재 페이지의 언어 판별 (<html lang="en"> 확인)
+const isEnglish = document.documentElement.lang === 'en';
+
+// 2. 일어 / 영어 메뉴 데이터 통합
 const singleMenuData = {
-  food: [
+  food: isEnglish ? [
+    { name: 'Edomae Nigiri Selection', price: 'Market Price', desc: 'Seasonal wild fish meticulously hand-pressed using traditional Edomae techniques.' },
+    { name: 'Signature ENN Roll', price: '¥3,800', desc: 'Luxurious roll filled with sea urchin (Uni), house-cured salmon roe, and selected bluefin tuna.' },
+    { name: 'Snow Crab, Uni & Caviar', price: '¥4,500', desc: 'Sweet snow crab served with rich sea urchin and caviar in a special small dish.' },
+    { name: 'Kinki Fish Shabu-Shabu', price: '¥5,200', desc: 'Premium Hokkaido Kinki (thorny head) fish prepared in a delicate dashi hot pot broth.' }
+  ] : [
     { name: '江戸前仕立て 握り各種', price: '時価', desc: '旬の天然魚を伝統の江戸前技法で一貫一貫丁寧に握ります。' },
     { name: '極みのえんロール', price: '¥3,800', desc: '馬糞雲丹、自家製いくら、厳選本マグロを贅沢に巻き上げた名物逸品巻き。' },
     { name: 'ズワイ蟹と雲丹とキャビア', price: '¥4,500', desc: '甘み豊かなズワイ蟹に濃厚な雲丹とキャビアを添えた特別小鉢。' },
     { name: '吉次のしゃぶしゃぶ', price: '¥5,200', desc: '北海道産・高級魚吉次（キンキ）の豊かな脂を贅沢に出汁しゃぶで。' }
   ],
-  drink: [
+  drink: isEnglish ? [
+    { name: 'Hitakami Junmai Daiginjo "Gourd"', price: 'Market Price', desc: 'Miyagi Ishinomaki’s specialty sake crafted specifically for sushi. Elegant gourd bottle.' },
+    { name: 'DATE SEVEN Premium Sake', price: 'Market Price', desc: 'An exclusive annual collaboration sake brewed jointly by 7 renowned Miyagi breweries.' },
+    { name: 'Jikon Junmai Daiginjo', price: 'From ¥2,200', desc: 'Rare premium sake with a fresh fruity aroma and exceptionally crisp finish.' },
+    { name: 'Isojiman / Zaku Satoshi', price: 'From ¥1,800', desc: 'Acclaimed top-tier sakes that pair seamlessly with sushi fat and seasoned rice.' }
+  ] : [
     { name: '日高見（ひたかみ）純米大吟醸 瓢箪', price: '時価', desc: '宮城・石巻の平孝酒造が誇る鮨専用酒。美しい瓢箪ボトルと極上の切れ味。' },
     { name: 'DATE SEVEN（デートセブン）', price: '時価', desc: '宮城県の蔵元7社が合同で醸す、年に一度の限定プレミアム日本酒。' },
     { name: '而今（じこん）純米大吟醸', price: '¥2,200 〜', desc: '入手困難とされる銘酒。果実のような華やかな香りと澄んだ透明感。' },
@@ -33,6 +47,28 @@ function closeLobby() {
   document.getElementById('lobby-screen').classList.add('is-closed');
 }
 
+// 스크롤 시 어두운 배경(omoi, waza) 진입을 감지하여 헤더 밝기 조절
+function updateHeaderTheme(container) {
+  const pageHeader = document.querySelector('.page-header');
+  if (!pageHeader || !container) return;
+
+  const currentSectionId = container.id;
+
+  if (currentSectionId === 'omoi' || currentSectionId === 'waza') {
+    const darkWrapper = container.querySelector('.omoi-main-wrapper, .waza-main-wrapper');
+    if (darkWrapper) {
+      const rect = darkWrapper.getBoundingClientRect();
+      if (rect.top <= 80) {
+        pageHeader.classList.add('is-dark');
+      } else {
+        pageHeader.classList.remove('is-dark');
+      }
+    }
+  } else {
+    pageHeader.classList.remove('is-dark');
+  }
+}
+
 function navigateToSection(sectionId) {
   previousSectionId = sectionId;
   const allSections = document.querySelectorAll('.section-block');
@@ -46,63 +82,12 @@ function navigateToSection(sectionId) {
   if (targetElement) {
     targetElement.classList.add('is-active');
     initIntersectionObserver(targetElement);
-
-    if (sectionId === 'menu') {
-      renderSingleMenu('food');
-    }
-  }
-
-  document.getElementById('lobby-screen').classList.add('is-closed');
-}
-
-// 어두운 영역 감지하여 헤더 테마 변경하는 함수
-function updateHeaderTheme(container) {
-  const pageHeader = document.querySelector('.page-header');
-  if (!pageHeader || !container) return;
-
-  const currentSectionId = container.id;
-
-  // omoi 또는 waza 섹션일 때 스크롤 위치 감지
-  if (currentSectionId === 'omoi' || currentSectionId === 'waza') {
-    const darkWrapper = container.querySelector('.omoi-main-wrapper, .waza-main-wrapper');
-    if (darkWrapper) {
-      // 어두운 배경 요소의 위쪽 위치 측정
-      const rect = darkWrapper.getBoundingClientRect();
-      
-      // 헤더 영역(상단 80px 기준)에 어두운 배경이 도착했을 때만 is-dark 클래스 추가
-      if (rect.top <= 80) {
-        pageHeader.classList.add('is-dark');
-      } else {
-        pageHeader.classList.remove('is-dark');
-      }
-    }
-  } else {
-    // 그 외 섹션은 항상 기본(금색/검은색) 유지
-    pageHeader.classList.remove('is-dark');
-  }
-}
-
-// 섹션 전환 함수 수정
-function navigateToSection(sectionId) {
-  previousSectionId = sectionId;
-  const allSections = document.querySelectorAll('.section-block');
-  
-  allSections.forEach(sec => {
-    sec.classList.remove('is-active');
-    sec.scrollTop = 0; // 스크롤 위치 초기화
-  });
-
-  const targetElement = document.getElementById(sectionId);
-  if (targetElement) {
-    targetElement.classList.add('is-active');
-    initIntersectionObserver(targetElement);
     
-    // 섹션 내 스크롤 이벤트 등록 (어두운 영역 실시간 감지)
     targetElement.onscroll = function () {
       updateHeaderTheme(targetElement);
     };
 
-    updateHeaderTheme(targetElement); // 처음 진입 시 상태 체크
+    updateHeaderTheme(targetElement);
 
     if (sectionId === 'menu') {
       renderSingleMenu('food');
@@ -110,28 +95,6 @@ function navigateToSection(sectionId) {
   }
 
   document.getElementById('lobby-screen').classList.add('is-closed');
-}
-
-// 스크롤 시에도 어두운 영역 진입 감지 (omoi, waza 내 스크롤 대응)
-function initIntersectionObserver(container) {
-  const reveals = container.querySelectorAll('.reveal');
-  reveals.forEach(el => el.classList.remove('is-visible'));
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-      }
-    });
-  }, {
-    root: container,
-    threshold: 0.05
-  });
-
-  reveals.forEach(el => observer.observe(el));
-  
-  // 섹션 진입 시 헤더 색상 반영
-  updateHeaderTheme(container);
 }
 
 function switchCategory(evt, cat) {
@@ -187,8 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+// 달력(flatpickr) 설정 - 영어 페이지면 영어, 아니면 일본어로 자동 설정
 flatpickr("#customDatePicker", {
-  locale: "ja",
+  locale: isEnglish ? "default" : "ja",
   dateFormat: "Y/m/d",
   minDate: "today",
   disableMobile: "true"
